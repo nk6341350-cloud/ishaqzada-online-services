@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ps" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b2348">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Ishaqzada">
+  <title>Ishaqzada Online Services</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="menu">☰</button>
+      <div class="brand-mini">
+        <img src="logo.jpg" alt="Ishaqzada logo">
+        <div><strong data-i18n="brand">اسحاقزاده آنلاین خدمات</strong><small>ISHAQZADA ONLINE SERVICES</small></div>
+      </div>
+      <div class="top-actions">
+        <select id="langSelect" class="lang-select" aria-label="Language">
+          <option value="ps">پښتو</option>
+          <option value="fa">فارسی</option>
+          <option value="en">English</option>
+        </select>
+        <button class="install-btn" id="installBtn" data-i18n="install">نصب اپ</button>
+      </div>
+    </header>
+
+    <aside class="drawer" id="drawer">
+      <div class="drawer-head">
+        <img src="logo.jpg" alt="">
+        <button id="closeDrawer">×</button>
+      </div>
+      <nav>
+        <button data-route="home">🏠 <span data-i18n="home">کور</span></button>
+        <button data-route="shop">🛍️ <span data-i18n="shop">بازار</span></button>
+        <button data-route="student">👤 <span data-i18n="student">شاګرد</span></button>
+        <button data-route="admin">🛡️ <span data-i18n="admin">اډمین</span></button>
+      </nav>
+    </aside>
+    <div class="backdrop" id="backdrop"></div>
+
+    <main id="view"></main>
+
+    <footer>
+      <div><strong data-i18n="brand">اسحاقزاده آنلاین خدمات</strong></div>
+      <p data-i18n="address">ادرس: د شهیدانو چوک، عمري تجارتي مارکیټ، کندهار، افغانستان</p>
+      <a href="https://wa.me/93700426319" target="_blank" rel="noopener">WhatsApp: 0700426319</a>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
