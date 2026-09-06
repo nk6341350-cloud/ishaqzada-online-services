@@ -13,8 +13,8 @@ fa:{brand:'خدمات آنلاین اسحاق‌زاده',install:'نصب اپ',
 en:{brand:'Ishaqzada Online Services',install:'Install App',home:'Home',shop:'Shop',student:'Student',admin:'Admin',welcome:'Your Online Marketplace',sub:'Fast and simple shopping with direct WhatsApp contact.',browse:'Browse Products',join:'Student Registration',products:'Products',all:'All',search:'Search...',noProducts:'No products yet.',register:'New Student Registration',login:'Student Login',name:'Name',whatsapp:'WhatsApp Number',photo:'Photo',pin:'PIN',submit:'Register',phone:'Phone',pending:'Your account is waiting for admin approval.',studentPanel:'Student Dashboard',addProduct:'Add Product',myProducts:'My Products',myOrders:'Orders',productName:'Product Name',qty:'Quantity',price:'Price (AFN)',province:'Province',address2:'Address',category:'Category',save:'Save',adminPanel:'Admin Dashboard',adminPin:'Admin PIN',approve:'Approve',reject:'Reject',students:'Students',orders:'Orders',orderNow:'Order Now',customerOrder:'Customer Order',customerPhone:'Customer Phone',location:'Current Location',getLocation:'Get Location',total:'Total',sendOrder:'Place Order',stock:'Stock',edit:'Edit',delete:'Delete',logout:'Logout',address:'Address: Shahidano Square, Omari Commercial Market, Kandahar, Afghanistan',newOrders:'New Orders',sales:'Total Sales',uniqueShop:'My Shop Link',copy:'Copy',status:'Status',new:'New',ready:'Ready',sent:'Sent',delivered:'Delivered',rejected:'Rejected',trackOrder:'Order Status',complaint:'Complaint Number',openMap:'Open Location',noLocation:'No location'}
 };
 let lang=localStorage.getItem('lang')||'ps',deferredPrompt=null;
-let studentSession=JSON.parse(sessionStorage.getItem('studentSession')||'null');
-let adminPin=sessionStorage.getItem('adminPin')||'';
+let studentSession=JSON.parse(localStorage.getItem('studentSession')||'null');
+let adminPin=localStorage.getItem('adminPin')||'';
 function t(k){return tr[lang]?.[k]||k}
 function esc(s=''){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function toast(m){let e=document.querySelector('#toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2500)}
@@ -45,10 +45,10 @@ async function shop(){
 
 function student(){if(studentSession)return studentPanel();document.querySelector('#view').innerHTML=`<section class="section"><div class="grid-2"><div class="card"><h2>${t('register')}</h2><form id="regForm" class="form"><div class="field"><label>${t('name')}</label><input name="name" required></div><div class="field"><label>${t('whatsapp')}</label><input name="whatsapp" required></div><div class="field"><label>${t('photo')}</label><input name="photo" type="file" accept="image/*" required></div><div class="field"><label>${t('pin')}</label><input name="pin" type="password" minlength="4" required></div><button class="btn btn-primary">${t('submit')}</button><div id="regSuccess" class="success-box hidden">✅ ته ثبت شوې. ستا حساب به اډمین تایید کوي؛ له تایید وروسته به جنس پورته کولای شې.</div></form></div><div class="card"><h2>${t('login')}</h2><form id="loginForm" class="form"><div class="field"><label>${t('phone')}</label><input name="phone" required></div><div class="field"><label>${t('pin')}</label><input name="pin" type="password" required></div><button class="btn btn-navy">${t('login')}</button></form></div></div></section>`;
  document.querySelector('#regForm').onsubmit=async e=>{e.preventDefault();try{let fd=new FormData(e.target),photo=await upload(fd.get('photo'),'students');await rpc('student_register',{p_name:fd.get('name'),p_whatsapp:fd.get('whatsapp'),p_photo_url:photo,p_pin:fd.get('pin')});e.target.reset();document.querySelector('#regSuccess').classList.remove('hidden');toast('ته ثبت شوې؛ ستا تایید به اډمین کوي، بیا به جنس پورته کولای شې.')}catch(x){toast(x.message)}};
- document.querySelector('#loginForm').onsubmit=async e=>{e.preventDefault();try{let fd=new FormData(e.target),rows=await rpc('student_login',{p_whatsapp:fd.get('phone'),p_pin:fd.get('pin')});let s=rows?.[0];if(!s){toast('شمېره یا PIN غلط دی');return}if(!s.approved){toast(t('pending'));return}studentSession={...s,pin:fd.get('pin')};sessionStorage.setItem('studentSession',JSON.stringify(studentSession));student()}catch(x){toast(x.message)}}
+ document.querySelector('#loginForm').onsubmit=async e=>{e.preventDefault();try{let fd=new FormData(e.target),rows=await rpc('student_login',{p_whatsapp:fd.get('phone'),p_pin:fd.get('pin')});let s=rows?.[0];if(!s){toast('شمېره یا PIN غلط دی');return}if(!s.approved){toast(t('pending'));return}studentSession={...s,pin:fd.get('pin')};localStorage.setItem('studentSession',JSON.stringify(studentSession));student()}catch(x){toast(x.message)}}
 }
 function studentPanel(){document.querySelector('#view').innerHTML=`<section class="section"><div class="section-head"><div><h2>${t('studentPanel')}</h2><div class="shop-owner"><img src="${studentSession.photo_url||'icon-192.png'}"><strong>${esc(studentSession.name)}</strong></div></div><button class="btn btn-danger" id="studentLogout">${t('logout')}</button></div><div class="card"><div class="section-head"><h3>${t('uniqueShop')}</h3><button class="btn btn-soft" id="copyShop">${t('copy')}</button></div><input id="shopLink" readonly style="width:100%;padding:12px;border:1px solid #ddd;border-radius:12px" value="${location.origin+location.pathname+'?shop='+studentSession.id+'#shop'}"></div><div class="tabs" style="margin-top:16px"><button class="active" data-stab="add">${t('addProduct')}</button><button data-stab="products">${t('myProducts')}</button><button data-stab="orders">${t('myOrders')}</button></div><div id="studentTab"></div></section>`;
- document.querySelector('#studentLogout').onclick=()=>{studentSession=null;sessionStorage.removeItem('studentSession');student()};
+ document.querySelector('#studentLogout').onclick=()=>{studentSession=null;localStorage.removeItem('studentSession');student()};
  document.querySelector('#copyShop').onclick=()=>navigator.clipboard.writeText(document.querySelector('#shopLink').value).then(()=>toast(t('copy')));
  document.querySelectorAll('[data-stab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-stab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderStudentTab(b.dataset.stab)});
  renderStudentTab('add');
@@ -70,9 +70,9 @@ async function studentEditProduct(p){
 async function studentDeleteProduct(id){try{await rpc('student_delete_product',{p_whatsapp:studentSession.whatsapp,p_pin:studentSession.pin,p_product_id:id});renderStudentTab('products')}catch(x){toast(x.message)}}
 async function studentOrderStatus(id,status){try{await rpc('student_update_order_status',{p_whatsapp:studentSession.whatsapp,p_pin:studentSession.pin,p_order_id:id,p_status:status});toast(t('save'))}catch(x){toast(x.message)}}
 
-function admin(){if(!adminPin){document.querySelector('#view').innerHTML=`<section class="section"><div class="card" style="max-width:520px;margin:auto"><h2>${t('admin')}</h2><form id="adminLogin" class="form"><div class="field"><label>${t('adminPin')}</label><input name="pin" type="password" required></div><button class="btn btn-navy">${t('login')}</button></form></div></section>`;document.querySelector('#adminLogin').onsubmit=async e=>{e.preventDefault();try{let p=new FormData(e.target).get('pin'),ok=await rpc('admin_login',{p_pin:p});if(ok){adminPin=p;sessionStorage.setItem('adminPin',p);admin()}else toast('PIN غلط دی')}catch(x){toast(x.message)}};return}
+function admin(){if(!adminPin){document.querySelector('#view').innerHTML=`<section class="section"><div class="card" style="max-width:520px;margin:auto"><h2>${t('admin')}</h2><form id="adminLogin" class="form"><div class="field"><label>${t('adminPin')}</label><input name="pin" type="password" required></div><button class="btn btn-navy">${t('login')}</button></form></div></section>`;document.querySelector('#adminLogin').onsubmit=async e=>{e.preventDefault();try{let p=new FormData(e.target).get('pin'),ok=await rpc('admin_login',{p_pin:p});if(ok){adminPin=p;localStorage.setItem('adminPin',p);admin()}else toast('PIN غلط دی')}catch(x){toast(x.message)}};return}
  document.querySelector('#view').innerHTML=`<section class="section"><div class="section-head"><div><h2>${t('adminPanel')}</h2><div class="muted">${t('brand')}</div></div><button class="btn btn-danger" id="adminLogout">${t('logout')}</button></div><div class="tabs"><button class="active" data-atab="students">${t('students')}</button><button data-atab="orders">${t('orders')}</button><button data-atab="products">${t('products')}</button></div><div id="adminTab"></div></section>`;
- document.querySelector('#adminLogout').onclick=()=>{adminPin='';sessionStorage.removeItem('adminPin');admin()};
+ document.querySelector('#adminLogout').onclick=()=>{adminPin='';localStorage.removeItem('adminPin');admin()};
  document.querySelectorAll('[data-atab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-atab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderAdminTab(b.dataset.atab)});
  renderAdminTab('students');
 }
@@ -97,13 +97,13 @@ async function openOrder(pid){
 }
 async function route(){
  document.documentElement.dir=lang==='en'?'ltr':'rtl';document.querySelector('#langSelect').value=lang;
- let r=(location.hash||'#home').slice(1);
- if(r==='home')document.querySelector('#view').innerHTML=home();
+ let r=(location.hash||'#shop').slice(1);
+ if(r==='home'){location.hash='shop';return}
  else if(r==='shop')await shop();
  else if(r==='student')student();
  else if(r==='admin')admin();
  else if(r==='track')await trackOrder();
- else document.querySelector('#view').innerHTML=home();
+ else {location.hash='shop';return}
  document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));
 }
 window.addEventListener('hashchange',route);setLang(lang);
