@@ -21,21 +21,21 @@ const cats=[
 ];
 
 const catPics={
-  'شمپو':'🧴',
-  'تیل':'🫗',
-  'درمل':'💊',
-  'روغتیا':'🩺',
-  'وزن':'⚖️',
-  'ویښتان':'💇',
-  'کریم':'🧴',
-  'سیروم':'✨',
-  'نور':'🛍️',
-  'ساعتونه':'⌚',
-  'عطرونه':'🌸',
-  'معجون':'🍯',
-  'کپسول':'💊',
-  'شمپو او تیل':'🧴',
-  'کپسول او تیل':'💊'
+  'شمپو':'cat-shampoo.jpg',
+  'تیل':'cat-oil.jpg',
+  'درمل':'cat-medicine.jpg',
+  'روغتیا':'cat-health.jpg',
+  'وزن':'cat-weight.jpg',
+  'ویښتان':'cat-hair.jpg',
+  'کریم':'cat-cream.jpg',
+  'سیروم':'cat-serum.jpg',
+  'نور':'cat-other.jpg',
+  'ساعتونه':'cat-watch.jpg',
+  'عطرونه':'cat-perfume.jpg',
+  'معجون':'cat-majoon.jpg',
+  'کپسول':'cat-capsule.jpg',
+  'شمپو او تیل':'cat-shampoo-oil.jpg',
+  'کپسول او تیل':'cat-capsule-oil.jpg'
 };
 
 const tr={
@@ -394,13 +394,13 @@ async function shop(){
     <div class="category-gallery" id="catRow">
 
       <button class="cat-card active" data-cat="">
-        <span class="cat-photo">🛍️</span>
+        <span class="cat-photo"><img src="cat-other.jpg" alt="${t('all')}"></span>
         <span>${t('all')}</span>
       </button>
 
       ${cats.map(c=>`
         <button class="cat-card" data-cat="${c}">
-          <span class="cat-photo">${catPics[c]}</span>
+          <span class="cat-photo"><img src="${catPics[c]}" alt="${c}"></span>
           <span>${c}</span>
         </button>
       `).join('')}

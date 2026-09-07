@@ -1,5 +1,5 @@
-const CACHE='ishaqzada-v8-20260907-final';
-const ASSETS=['./','index.html','styles.css','app.js','config.js','manifest.json','logo.jpg','icon-192.png','icon-512.png'];
+const CACHE='ishaqzada-v9-20260908-real-icons';
+const ASSETS=['./','index.html','styles.css','app.js','config.js','manifest.json','logo.jpg','icon-192.png','icon-512.png','cat-medicine.jpg','cat-oil.jpg','cat-shampoo.jpg','cat-other.jpg','cat-cream.jpg','cat-hair.jpg','cat-weight.jpg','cat-health.jpg','cat-perfume.jpg','cat-watch.jpg','cat-serum.jpg','cat-majoon.jpg','cat-capsule.jpg','cat-shampoo-oil.jpg','cat-capsule-oil.jpg'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
