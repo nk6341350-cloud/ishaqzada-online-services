@@ -362,7 +362,9 @@ if('serviceWorker' in navigator){
 function whatsappNumber(value=''){
   let n=String(value||'').replace(/\D/g,'');
   if(n.startsWith('0093')) n=n.slice(2);
-  if(n.startsWith('0')) n='93'+n.slice(1);
+  if(n.startsWith('93')) return n;
+  if(n.startsWith('0')) return '93'+n.slice(1);
+  if(n.length===9) return '93'+n;
   return n;
 }
 

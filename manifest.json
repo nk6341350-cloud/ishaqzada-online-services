@@ -1,23 +1,30 @@
 {
   "name": "Ishaqzada Online Services",
   "short_name": "Ishaqzada",
+  "description": "Ishaqzada Online Services",
   "start_url": "./#shop",
+  "scope": "./",
+  "id": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#f8f4ea",
   "theme_color": "#0b2348",
+  "orientation": "any",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "scope": "./",
-  "id": "./",
-  "orientation": "any"
+  ]
 }
