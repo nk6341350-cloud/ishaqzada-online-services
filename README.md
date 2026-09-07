@@ -21,5 +21,3 @@
 - Admin dashboard
 - Student unique shop link
 - Footer address + complaint WhatsApp
-
-- Student orders now show customer address and a Google Maps button for the customer's shared location.

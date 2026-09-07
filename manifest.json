@@ -1,7 +1,7 @@
 {
   "name": "Ishaqzada Online Services",
   "short_name": "Ishaqzada",
-  "start_url": "./#home",
+  "start_url": "./#shop",
   "display": "standalone",
   "background_color": "#f8f4ea",
   "theme_color": "#0b2348",
@@ -16,5 +16,8 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "scope": "./",
+  "id": "./",
+  "orientation": "any"
 }

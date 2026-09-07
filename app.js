@@ -13,7 +13,11 @@ const cats=[
   'سیروم',
   'نور',
   'ساعتونه',
-  'عطرونه'
+  'عطرونه',
+  'معجون',
+  'کپسول',
+  'شمپو او تیل',
+  'کپسول او تیل'
 ];
 
 const catPics={
@@ -27,7 +31,11 @@ const catPics={
   'سیروم':'✨',
   'نور':'🛍️',
   'ساعتونه':'⌚',
-  'عطرونه':'🌸'
+  'عطرونه':'🌸',
+  'معجون':'🍯',
+  'کپسول':'💊',
+  'شمپو او تیل':'🧴',
+  'کپسول او تیل':'💊'
 };
 
 const tr={
@@ -322,16 +330,25 @@ window.addEventListener('beforeinstallprompt',e=>{
 });
 
 document.querySelector('#installBtn').onclick=async()=>{
+  if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true){
+    toast(lang==='en'?'App is already installed':'اپلیکشن لا له مخکې نصب دی');
+    return;
+  }
   if(deferredPrompt){
     deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     deferredPrompt=null;
+    return;
+  }
+  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isiOS){
+    alert(lang==='en'
+      ?'To put the app on your Home Screen: open this site in Safari, tap Share, then tap Add to Home Screen.'
+      :'د اپلیکشن د سکرین پر مخ نصبولو لپاره: دا سایټ په Safari کې خلاص کړه، د Share تڼۍ ووهه، بیا Add to Home Screen ووهه.');
   }else{
-    toast(
-      lang==='en'
-      ?'Use Add to Home Screen in your browser menu.'
-      :'د براوزر له مینو څخه Add to Home Screen وکاروئ.'
-    );
+    toast(lang==='en'
+      ?'Open the browser menu and choose Install app or Add to Home screen.'
+      :'د براوزر مینو خلاص کړه او Install app یا Add to Home screen ووهه.');
   }
 };
 
@@ -340,6 +357,13 @@ if('serviceWorker' in navigator){
     'load',
     ()=>navigator.serviceWorker.register('sw.js').catch(()=>{})
   );
+}
+
+function whatsappNumber(value=''){
+  let n=String(value||'').replace(/\D/g,'');
+  if(n.startsWith('0093')) n=n.slice(2);
+  if(n.startsWith('0')) n='93'+n.slice(1);
+  return n;
 }
 
 async function shop(){
@@ -454,9 +478,7 @@ async function shop(){
 
             <a
               class="wa"
-              href="https://wa.me/${String(
-                p.student_whatsapp||''
-              ).replace(/\D/g,'')}"
+              href="https://wa.me/${whatsappNumber(p.student_whatsapp||'')}"
               target="_blank"
             >
               WhatsApp · ${esc(p.student_name)}
