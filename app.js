@@ -480,7 +480,11 @@ async function shop(){
 
             <a
               class="wa"
-              href="https://wa.me/${whatsappNumber(p.student_whatsapp||'')}"
+              href="https://wa.me/${whatsappNumber(p.student_whatsapp||'')}?text=${encodeURIComponent(
+                `سلام، زه د «${p.name||''}» په اړه نور معلومات غواړم.
+قیمت: ${Number(p.price||0).toLocaleString('en-US')} AFN
+مهرباني وکړئ د دې جنس په اړه نور معلومات راکړئ.`
+              )}"
               target="_blank"
             >
               WhatsApp · ${esc(p.student_name)}
