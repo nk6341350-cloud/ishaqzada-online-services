@@ -59,7 +59,7 @@ productName:'د جنس نوم',
 qty:'تعداد',
 price:'قیمت (AFN)',
 province:'ولایت',
-address2:'ادرس',
+address2:'تشریحات',
 category:'کټګوري',
 save:'ثبت',
 adminPanel:'د اډمین صفحه',
@@ -122,7 +122,7 @@ productName:'نام محصول',
 qty:'تعداد',
 price:'قیمت (AFN)',
 province:'ولایت',
-address2:'آدرس',
+address2:'توضیحات',
 category:'دسته‌بندی',
 save:'ثبت',
 adminPanel:'صفحه ادمین',
@@ -183,7 +183,7 @@ productName:'Product Name',
 qty:'Quantity',
 price:'Price (AFN)',
 province:'Province',
-address2:'Address',
+address2:'Description',
 category:'Category',
 save:'Save',
 adminPanel:'Admin Dashboard',
@@ -399,285 +399,770 @@ async function shop(){
       {p_student_id:sid}
     );
 
-    let all=rows||[];
-    let cat='';
-
-    const box=document.querySelector('#productGrid');
-    const search=document.querySelector('#searchBox');
+    let active='';
+    let q='';
 
     const draw=()=>{
 
-      let q=(search.value||'').toLowerCase();
-
-      let ps=all.filter(p=>
-        (!cat||p.category===cat)&&
-        p.name.toLowerCase().includes(q)
+      let list=rows.filter(p=>
+        (!active||p.category===active)&&
+        (!q||String(p.name).toLowerCase().includes(q))
       );
 
-      box.innerHTML=ps.length
-      ?ps.map(p=>`
+      document.querySelector('#productGrid').innerHTML=
+        list.length
+        ?list.map(productCard).join('')
+        :`<div class="card empty">${t('noProducts')}</div>`;
 
-        <article class="card product">
+      document.querySelectorAll('[data-order]').forEach(b=>{
+        b.onclick=()=>orderModal(
+          rows.find(x=>String(x.id)===b.dataset.order)
+        );
+      });
+    };
 
-          <img
-            src="${p.photo_url||'icon-512.png'}"
-            alt="${esc(p.name)}"
-          >
+    document.querySelectorAll('.cat-card').forEach(b=>{
+      b.onclick=()=>{
+        document.querySelectorAll('.cat-card')
+          .forEach(x=>x.classList.remove('active'));
 
-          <div class="product-body">
+        b.classList.add('active');
+        active=b.dataset.cat;
+        draw();
+      };
+    });
 
-            <div class="badge">
-              ${esc(p.category)}
-            </div>
-
-            <h3>${esc(p.name)}</h3>
-
-            <div class="price">
-              ${Number(p.price).toLocaleString('en-US')} AFN
-            </div>
-
-            <div class="stock">
-              ${t('stock')}: ${p.quantity}
-            </div>
-
-            <p class="muted">
-              ${esc(p.province)}
-            </p>
-
-            <button
-              class="btn btn-navy"
-              style="width:100%;margin-bottom:8px"
-              onclick="openOrder('${p.id}')"
-            >
-              ${t('orderNow')}
-            </button>
-
-            <a
-              class="wa"
-              href="https://wa.me/${String(
-                p.student_whatsapp||''
-              ).replace(/\D/g,'')}"
-              target="_blank"
-            >
-              WhatsApp · ${esc(p.student_name)}
-            </a>
-
-          </div>
-
-        </article>
-
-      `).join('')
-      :`
-        <div
-          class="card empty"
-          style="grid-column:1/-1"
-        >
-          ${t('noProducts')}
-        </div>
-      `;
+    document.querySelector('#searchBox').oninput=e=>{
+      q=e.target.value.trim().toLowerCase();
+      draw();
     };
 
     draw();
 
-    search.oninput=draw;
-
-    document
-      .querySelectorAll('#catRow .cat-card')
-      .forEach(b=>{
-
-        b.onclick=()=>{
-
-          document
-            .querySelectorAll('#catRow .cat-card')
-            .forEach(x=>x.classList.remove('active'));
-
-          b.classList.add('active');
-
-          cat=b.dataset.cat;
-
-          draw();
-        };
-
-      });
-
   }catch(e){
-    toast(e.message);
+    document.querySelector('#productGrid').innerHTML=
+      `<div class="card empty">${esc(e.message)}</div>`;
   }
 }
+function productCard(p){
+  const price=Number(p.price||0);
+  const qty=Number(p.quantity||0);
 
-function student(){
+  return `
+    <div class="product-card">
 
-  if(studentSession){
-    return studentPanel();
-  }
-
-  document.querySelector('#view').innerHTML=`
-  <section class="section">
-
-    <div class="grid-2">
-
-      <div class="card">
-
-        <h2>${t('register')}</h2>
-
-        <form id="regForm" class="form">
-
-          <div class="field">
-            <label>${t('name')}</label>
-            <input name="name" required>
-          </div>
-
-          <div class="field">
-            <label>${t('whatsapp')}</label>
-            <input name="whatsapp" required>
-          </div>
-
-          <div class="field">
-            <label>${t('photo')}</label>
-            <input
-              name="photo"
-              type="file"
-              accept="image/*"
-              required
-            >
-          </div>
-
-          <div class="field">
-            <label>${t('pin')}</label>
-            <input
-              name="pin"
-              type="password"
-              minlength="4"
-              required
-            >
-          </div>
-
-          <button class="btn btn-primary">
-            ${t('submit')}
-          </button>
-
-          <div
-            id="regSuccess"
-            class="success-box hidden"
-          >
-            ✅ ته ثبت شوې. ستا تایید به اډمین کوي؛
-            له تایید وروسته به جنس پورته کولای شې.
-          </div>
-
-        </form>
-
+      <div class="product-photo">
+        ${
+          p.photo_url
+          ? `<img src="${esc(p.photo_url)}" alt="${esc(p.name)}">`
+          : `<div class="no-photo">${catPics[p.category]||'🛍️'}</div>`
+        }
       </div>
 
-      <div class="card">
+      <div class="product-info">
 
-        <h2>${t('login')}</h2>
+        <h3>${esc(p.name||'')}</h3>
 
-        <form id="loginForm" class="form">
+        <div class="product-meta">
+          <span>${esc(p.category||'')}</span>
+        </div>
 
-          <div class="field">
-            <label>${t('phone')}</label>
-            <input name="phone" required>
-          </div>
+        <div class="product-price">
+          ${price.toLocaleString('en-US')} AFN
+        </div>
 
-          <div class="field">
-            <label>${t('pin')}</label>
-            <input
-              name="pin"
-              type="password"
-              required
-            >
-          </div>
+        ${
+          p.description
+          ? `<div class="product-description">${esc(p.description)}</div>`
+          : p.address
+            ? `<div class="product-description">${esc(p.address)}</div>`
+            : ''
+        }
 
-          <button class="btn btn-navy">
-            ${t('login')}
-          </button>
+        <div class="product-stock">
+          ${t('stock')}: ${qty.toLocaleString('en-US')}
+        </div>
 
-        </form>
+        <button
+          class="btn primary"
+          data-order="${esc(p.id)}"
+          ${qty<=0?'disabled':''}
+        >
+          ${t('orderNow')}
+        </button>
 
       </div>
 
     </div>
+  `;
+}
 
-  </section>
+
+function closeModal(){
+  const modal=document.querySelector('#modal');
+  if(modal){
+    modal.classList.remove('show');
+    modal.innerHTML='';
+  }
+}
+
+
+function orderModal(p){
+
+  if(!p) return;
+
+  const modal=document.querySelector('#modal');
+
+  modal.innerHTML=`
+    <div class="modal-card">
+
+      <button
+        type="button"
+        class="modal-close"
+        id="modalClose"
+      >×</button>
+
+      <h2>${t('customerOrder')}</h2>
+
+      <div class="order-product">
+
+        ${
+          p.photo_url
+          ? `<img src="${esc(p.photo_url)}" alt="${esc(p.name)}">`
+          : `<div class="no-photo">${catPics[p.category]||'🛍️'}</div>`
+        }
+
+        <div>
+          <h3>${esc(p.name||'')}</h3>
+
+          <strong>
+            ${Number(p.price||0).toLocaleString('en-US')} AFN
+          </strong>
+        </div>
+
+      </div>
+
+      <form id="customerOrderForm" class="form">
+
+        <div class="field">
+          <label>${t('customerPhone')}</label>
+          <input
+            name="phone"
+            type="tel"
+            inputmode="tel"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>${t('qty')}</label>
+          <input
+            name="qty"
+            type="number"
+            inputmode="numeric"
+            min="1"
+            max="${Number(p.quantity||1)}"
+            value="1"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label>${t('address2')}</label>
+          <textarea
+            name="address"
+            rows="4"
+            placeholder="${t('address2')}"
+          ></textarea>
+        </div>
+
+        <input
+          type="hidden"
+          name="latitude"
+          id="orderLat"
+        >
+
+        <input
+          type="hidden"
+          name="longitude"
+          id="orderLng"
+        >
+
+        <button
+          type="button"
+          class="btn secondary"
+          id="getLocationBtn"
+        >
+          📍 ${t('getLocation')}
+        </button>
+
+        <div
+          id="locationStatus"
+          class="muted"
+        ></div>
+
+        <div class="order-total">
+          ${t('total')}:
+          <strong id="orderTotal">
+            ${Number(p.price||0).toLocaleString('en-US')} AFN
+          </strong>
+        </div>
+
+        <button
+          type="submit"
+          class="btn primary"
+        >
+          ${t('sendOrder')}
+        </button>
+
+      </form>
+
+    </div>
   `;
 
-  document.querySelector('#regForm').onsubmit=async e=>{
+  modal.classList.add('show');
+
+  document.querySelector('#modalClose').onclick=closeModal;
+
+  modal.onclick=e=>{
+    if(e.target===modal) closeModal();
+  };
+
+  const form=document.querySelector('#customerOrderForm');
+  const qtyInput=form.querySelector('[name="qty"]');
+
+  qtyInput.oninput=()=>{
+    let qty=Math.max(1,Number(qtyInput.value||1));
+
+    document.querySelector('#orderTotal').textContent=
+      `${(qty*Number(p.price||0)).toLocaleString('en-US')} AFN`;
+  };
+
+
+  document.querySelector('#getLocationBtn').onclick=()=>{
+
+    const status=document.querySelector('#locationStatus');
+
+    if(!navigator.geolocation){
+      status.textContent=t('noLocation');
+      return;
+    }
+
+    status.textContent='...';
+
+    navigator.geolocation.getCurrentPosition(
+      pos=>{
+        document.querySelector('#orderLat').value=
+          pos.coords.latitude;
+
+        document.querySelector('#orderLng').value=
+          pos.coords.longitude;
+
+        status.textContent='✅';
+      },
+      ()=>{
+        status.textContent=t('noLocation');
+      },
+      {
+        enableHighAccuracy:true,
+        timeout:10000
+      }
+    );
+  };
+
+
+  form.onsubmit=async e=>{
 
     e.preventDefault();
 
     try{
 
-      let fd=new FormData(e.target);
+      const f=new FormData(form);
 
-      let photo=await upload(
-        fd.get('photo'),
-        'students'
-      );
+      const qty=Number(f.get('qty')||1);
+
+      if(qty<1){
+        return;
+      }
+
+      if(qty>Number(p.quantity||0)){
+        toast(
+          lang==='en'
+          ?'Not enough stock'
+          :'په ذخیره کې دومره جنس نشته'
+        );
+        return;
+      }
+
+      const phone=String(f.get('phone')||'').trim();
+      const address=String(f.get('address')||'').trim();
+      const latitude=String(f.get('latitude')||'').trim();
+      const longitude=String(f.get('longitude')||'').trim();
 
       await rpc(
-        'student_register',
+        'customer_add_order',
         {
-          p_name:fd.get('name'),
-          p_whatsapp:fd.get('whatsapp'),
-          p_photo_url:photo,
-          p_pin:fd.get('pin')
+          p_product_id:p.id,
+          p_customer_phone:phone,
+          p_quantity:qty,
+          p_address:address,
+          p_latitude:latitude||null,
+          p_longitude:longitude||null
         }
       );
 
-      e.target.reset();
+      /*
+        مهم:
+        مشتری باید د هماغه شاګرد WhatsApp ته ولاړ شي
+        چې جنس یې پورته کړی دی.
+      */
 
-      document
-        .querySelector('#regSuccess')
-        .classList.remove('hidden');
+      const studentWhatsApp=
+        p.student_whatsapp||
+        p.whatsapp||
+        p.owner_whatsapp||
+        '';
 
-      toast(
-        'ته ثبت شوې؛ ستا تایید به اډمین کوي، بیا به جنس پورته کولای شې.'
-      );
+      if(studentWhatsApp){
+
+        let wa=String(studentWhatsApp)
+          .replace(/\D/g,'');
+
+        if(wa.startsWith('0')){
+          wa='93'+wa.substring(1);
+        }
+
+        const total=
+          qty*Number(p.price||0);
+
+        let msg=
+          `سلام، زه دغه جنس غواړم:\n\n`+
+          `جنس: ${p.name||''}\n`+
+          `تعداد: ${qty}\n`+
+          `قیمت: ${Number(p.price||0)} AFN\n`+
+          `ټول: ${total} AFN\n`+
+          `شمېره: ${phone}`;
+
+        if(address){
+          msg+=`\nتشریحات: ${address}`;
+        }
+
+        if(latitude&&longitude){
+          msg+=
+            `\nلوکیشن: https://maps.google.com/?q=`+
+            `${latitude},${longitude}`;
+        }
+
+        const waUrl=
+          `https://wa.me/${wa}?text=${encodeURIComponent(msg)}`;
+
+        closeModal();
+
+        window.location.href=waUrl;
+
+      }else{
+
+        closeModal();
+
+        toast(
+          lang==='en'
+          ?'Order saved successfully'
+          :'فرمایش په بریالیتوب ثبت شو'
+        );
+      }
 
     }catch(x){
       toast(x.message);
     }
   };
+}
 
-  document.querySelector('#loginForm').onsubmit=async e=>{
+
+function normalizeWhatsApp(value=''){
+
+  let n=String(value).replace(/\D/g,'');
+
+  if(n.startsWith('0093')){
+    n=n.substring(2);
+  }
+
+  if(n.startsWith('0')){
+    n='93'+n.substring(1);
+  }
+
+  return n;
+}
+
+
+function studentShopLink(studentId){
+
+  const url=new URL(
+    location.origin+location.pathname
+  );
+
+  url.searchParams.set('shop',studentId);
+
+  url.hash='#shop';
+
+  return url.toString();
+}
+
+
+async function copyText(txt){
+
+  try{
+
+    await navigator.clipboard.writeText(txt);
+
+    toast(
+      lang==='en'
+      ?'Copied'
+      :'کاپي شو'
+    );
+
+  }catch(e){
+
+    const input=document.createElement('textarea');
+
+    input.value=txt;
+
+    document.body.appendChild(input);
+
+    input.select();
+
+    document.execCommand('copy');
+
+    input.remove();
+
+    toast(
+      lang==='en'
+      ?'Copied'
+      :'کاپي شو'
+    );
+  }
+}
+async function studentPage(){
+
+  if(!studentSession){
+    return studentLoginPage();
+  }
+
+  document.querySelector('#view').innerHTML=`
+    <section class="section">
+
+      <div class="section-head">
+        <div>
+          <h2>${t('studentPanel')}</h2>
+          <div class="muted">
+            ${esc(studentSession.name||'')}
+          </div>
+        </div>
+
+        <button
+          class="btn secondary"
+          id="studentLogout"
+        >
+          ${t('logout')}
+        </button>
+      </div>
+
+      <div class="student-tabs">
+
+        <button
+          class="btn primary"
+          data-student-tab="add"
+        >
+          ${t('addProduct')}
+        </button>
+
+        <button
+          class="btn secondary"
+          data-student-tab="products"
+        >
+          ${t('myProducts')}
+        </button>
+
+        <button
+          class="btn secondary"
+          data-student-tab="orders"
+        >
+          ${t('myOrders')}
+        </button>
+
+      </div>
+
+      <div class="card shop-link-card">
+
+        <strong>${t('uniqueShop')}</strong>
+
+        <div class="shop-link-row">
+
+          <input
+            id="studentShopLink"
+            value="${esc(studentShopLink(studentSession.id))}"
+            readonly
+          >
+
+          <button
+            class="btn primary"
+            id="copyShopLink"
+          >
+            ${t('copy')}
+          </button>
+
+        </div>
+
+      </div>
+
+      <div id="studentTab"></div>
+
+    </section>
+  `;
+
+  document.querySelector('#studentLogout').onclick=()=>{
+    studentSession=null;
+    localStorage.removeItem('studentSession');
+    studentLoginPage();
+  };
+
+  document.querySelector('#copyShopLink').onclick=()=>{
+    copyText(
+      document.querySelector('#studentShopLink').value
+    );
+  };
+
+  document.querySelectorAll('[data-student-tab]').forEach(b=>{
+    b.onclick=()=>{
+
+      document.querySelectorAll('[data-student-tab]')
+        .forEach(x=>{
+          x.classList.remove('primary');
+          x.classList.add('secondary');
+        });
+
+      b.classList.remove('secondary');
+      b.classList.add('primary');
+
+      renderStudentTab(b.dataset.studentTab);
+    };
+  });
+
+  renderStudentTab('add');
+}
+
+
+function studentLoginPage(){
+
+  document.querySelector('#view').innerHTML=`
+    <section class="section">
+
+      <div class="auth-grid">
+
+        <div class="card">
+
+          <h2>${t('login')}</h2>
+
+          <form id="studentLoginForm" class="form">
+
+            <div class="field">
+              <label>${t('phone')}</label>
+
+              <input
+                name="whatsapp"
+                type="tel"
+                inputmode="tel"
+                required
+              >
+            </div>
+
+            <div class="field">
+              <label>${t('pin')}</label>
+
+              <input
+                name="pin"
+                type="password"
+                inputmode="numeric"
+                required
+              >
+            </div>
+
+            <button
+              class="btn primary"
+              type="submit"
+            >
+              ${t('login')}
+            </button>
+
+          </form>
+
+        </div>
+
+        <div class="card">
+
+          <h2>${t('register')}</h2>
+
+          <form id="studentRegisterForm" class="form">
+
+            <div class="field">
+              <label>${t('name')}</label>
+
+              <input
+                name="name"
+                required
+              >
+            </div>
+
+            <div class="field">
+              <label>${t('whatsapp')}</label>
+
+              <input
+                name="whatsapp"
+                type="tel"
+                inputmode="tel"
+                required
+              >
+            </div>
+
+            <div class="field">
+              <label>${t('photo')}</label>
+
+              <input
+                name="photo"
+                type="file"
+                accept="image/*"
+              >
+            </div>
+
+            <div class="field">
+              <label>${t('pin')}</label>
+
+              <input
+                name="pin"
+                type="password"
+                inputmode="numeric"
+                required
+              >
+            </div>
+
+            <button
+              class="btn primary"
+              type="submit"
+            >
+              ${t('submit')}
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </section>
+  `;
+
+
+  document.querySelector('#studentLoginForm').onsubmit=async e=>{
 
     e.preventDefault();
 
     try{
 
-      let fd=new FormData(e.target);
+      let f=new FormData(e.target);
 
-      let rows=await rpc(
+      let whatsapp=normalizeWhatsApp(
+        f.get('whatsapp')
+      );
+
+      let pin=String(
+        f.get('pin')||''
+      ).trim();
+
+      let result=await rpc(
         'student_login',
         {
-          p_whatsapp:fd.get('phone'),
-          p_pin:fd.get('pin')
+          p_whatsapp:whatsapp,
+          p_pin:pin
         }
       );
 
-      let s=rows?.[0];
+      let s=Array.isArray(result)
+        ?result[0]
+        :result;
 
       if(!s){
-        toast('شمېره یا PIN غلط دی');
-        return;
+        throw new Error(
+          lang==='en'
+          ?'Wrong phone number or PIN'
+          :'شمېره یا PIN غلط دی'
+        );
       }
 
-      if(!s.approved){
+      if(
+        s.approved===false ||
+        s.status==='pending'
+      ){
         toast(t('pending'));
         return;
       }
 
-      studentSession={
-        ...s,
-        pin:fd.get('pin')
-      };
+      studentSession=s;
 
       localStorage.setItem(
         'studentSession',
         JSON.stringify(studentSession)
       );
 
-      student();
+      studentPage();
+
+    }catch(x){
+      toast(x.message);
+    }
+  };
+
+
+  document.querySelector('#studentRegisterForm').onsubmit=async e=>{
+
+    e.preventDefault();
+
+    try{
+
+      let f=new FormData(e.target);
+
+      let photo='';
+
+      const photoFile=f.get('photo');
+
+      if(photoFile&&photoFile.size){
+        photo=await upload(
+          photoFile,
+          'students'
+        );
+      }
+
+      let whatsapp=normalizeWhatsApp(
+        f.get('whatsapp')
+      );
+
+      await rpc(
+        'student_register',
+        {
+          p_name:String(
+            f.get('name')||''
+          ).trim(),
+
+          p_whatsapp:whatsapp,
+
+          p_pin:String(
+            f.get('pin')||''
+          ).trim(),
+
+          p_photo_url:photo
+        }
+      );
+
+      e.target.reset();
+
+      toast(t('pending'));
 
     }catch(x){
       toast(x.message);
@@ -685,125 +1170,6 @@ function student(){
   };
 }
 
-function studentPanel(){
-
-  document.querySelector('#view').innerHTML=`
-  <section class="section">
-
-    <div class="section-head">
-
-      <div>
-        <h2>${t('studentPanel')}</h2>
-
-        <div class="shop-owner">
-          <img
-            src="${studentSession.photo_url||'icon-192.png'}"
-          >
-          <strong>
-            ${esc(studentSession.name)}
-          </strong>
-        </div>
-      </div>
-
-      <button
-        class="btn btn-danger"
-        id="studentLogout"
-      >
-        ${t('logout')}
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <div class="section-head">
-        <h3>${t('uniqueShop')}</h3>
-        <button
-          class="btn btn-soft"
-          id="copyShop"
-        >
-          ${t('copy')}
-        </button>
-      </div>
-
-      <input
-        id="shopLink"
-        readonly
-        style="
-          width:100%;
-          padding:12px;
-          border:1px solid #ddd;
-          border-radius:12px
-        "
-        value="${
-          location.origin+
-          location.pathname+
-          '?shop='+
-          studentSession.id+
-          '#shop'
-        }"
-      >
-
-    </div>
-
-    <div
-      class="tabs"
-      style="margin-top:16px"
-    >
-
-      <button
-        class="active"
-        data-stab="add"
-      >
-        ${t('addProduct')}
-      </button>
-
-      <button data-stab="products">
-        ${t('myProducts')}
-      </button>
-
-      <button data-stab="orders">
-        ${t('myOrders')}
-      </button>
-
-    </div>
-
-    <div id="studentTab"></div>
-
-  </section>
-  `;
-
-  document.querySelector('#studentLogout').onclick=()=>{
-    studentSession=null;
-    localStorage.removeItem('studentSession');
-    student();
-  };
-
-  document.querySelector('#copyShop').onclick=()=>{
-    navigator.clipboard
-      .writeText(
-        document.querySelector('#shopLink').value
-      )
-      .then(()=>toast(t('copy')));
-  };
-
-  document.querySelectorAll('[data-stab]').forEach(b=>{
-
-    b.onclick=()=>{
-
-      document
-        .querySelectorAll('[data-stab]')
-        .forEach(x=>x.classList.remove('active'));
-
-      b.classList.add('active');
-
-      renderStudentTab(b.dataset.stab);
-    };
-
-  });
-
-  renderStudentTab('add');
-}
 
 async function renderStudentTab(tab){
 
@@ -811,85 +1177,123 @@ async function renderStudentTab(tab){
 
   if(!box) return;
 
+
   if(tab==='add'){
 
     box.innerHTML=`
-    <div class="card">
+      <div class="card">
 
-      <form
-        id="productForm"
-        class="form"
-      >
+        <form
+          id="productForm"
+          class="form"
+        >
 
-        <div class="field">
-          <label>${t('photo')}</label>
-          <input
-            name="photo"
-            type="file"
-            accept="image/*"
-            required
+          <div class="field">
+
+            <label>${t('photo')}</label>
+
+            <input
+              name="photo"
+              type="file"
+              accept="image/*"
+              required
+            >
+
+          </div>
+
+
+          <div class="field">
+
+            <label>${t('productName')}</label>
+
+            <input
+              name="name"
+              required
+            >
+
+          </div>
+
+
+          <div class="grid-2">
+
+            <div class="field">
+
+              <label>${t('qty')}</label>
+
+              <input
+                name="qty"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                required
+              >
+
+            </div>
+
+
+            <div class="field">
+
+              <label>${t('price')}</label>
+
+              <input
+                name="price"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="0.01"
+                required
+              >
+
+            </div>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>${t('category')}</label>
+
+            <select
+              name="category"
+              required
+            >
+
+              ${cats.map(c=>`
+                <option value="${esc(c)}">
+                  ${esc(c)}
+                </option>
+              `).join('')}
+
+            </select>
+
+          </div>
+
+
+          <div class="field">
+
+            <label>${t('address2')}</label>
+
+            <textarea
+              name="description"
+              rows="4"
+              placeholder="${t('address2')}"
+            ></textarea>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="btn primary"
           >
-        </div>
+            ${t('save')}
+          </button>
 
-        <div class="field">
-          <label>${t('productName')}</label>
-          <input name="name" required>
-        </div>
+        </form>
 
-        <div class="grid-2">
-
-          <div class="field">
-            <label>${t('qty')}</label>
-            <input
-              name="qty"
-              type="number"
-              min="0"
-              required
-            >
-          </div>
-
-          <div class="field">
-            <label>${t('price')}</label>
-            <input
-              name="price"
-              type="number"
-              min="0"
-              required
-            >
-          </div>
-
-        </div>
-
-        <div class="field">
-
-          <label>${t('category')}</label>
-
-          <select name="category">
-            ${cats.map(c=>`
-              <option>${c}</option>
-            `).join('')}
-          </select>
-
-        </div>
-
-        <div class="field">
-          <label>${t('province')}</label>
-          <input name="province" required>
-        </div>
-
-        <div class="field">
-          <label>${t('address2')}</label>
-          <textarea name="address"></textarea>
-        </div>
-
-        <button class="btn btn-primary">
-          ${t('save')}
-        </button>
-
-      </form>
-
-    </div>
+      </div>
     `;
+
 
     document.querySelector('#productForm').onsubmit=async e=>{
 
@@ -909,17 +1313,32 @@ async function renderStudentTab(tab){
           {
             p_whatsapp:studentSession.whatsapp,
             p_pin:studentSession.pin,
-            p_name:f.get('name'),
+
+            p_name:String(
+              f.get('name')||''
+            ).trim(),
+
             p_quantity:+f.get('qty'),
+
             p_price:+f.get('price'),
-            p_category:f.get('category'),
-            p_province:f.get('province'),
-            p_address:f.get('address'),
+
+            p_category:String(
+              f.get('category')||''
+            ),
+
+            p_province:'',
+
+            p_address:String(
+              f.get('description')||''
+            ).trim(),
+
             p_photo_url:photo
           }
         );
 
         toast(t('save'));
+
+        e.target.reset();
 
         renderStudentTab('products');
 
@@ -931,9 +1350,10 @@ async function renderStudentTab(tab){
     return;
   }
 
-  try{
 
-    if(tab==='products'){
+  if(tab==='products'){
+
+    try{
 
       let rows=await rpc(
         'student_products',
@@ -944,73 +1364,182 @@ async function renderStudentTab(tab){
       );
 
       box.innerHTML=rows?.length
-      ?`
-        <div class="product-grid">
+        ?`
+          <div class="product-grid">
 
-          ${rows.map(p=>`
+            ${rows.map(p=>`
 
-            <div class="card product">
+              <div class="product-card">
 
-              <img
-                src="${p.photo_url||'icon-512.png'}"
-              >
+                <div class="product-photo">
 
-              <div class="product-body">
+                  ${
+                    p.photo_url
+                    ?`
+                      <img
+                        src="${esc(p.photo_url)}"
+                        alt="${esc(p.name)}"
+                      >
+                    `
+                    :`
+                      <div class="no-photo">
+                        ${catPics[p.category]||'🛍️'}
+                      </div>
+                    `
+                  }
 
-                <h3>${esc(p.name)}</h3>
-
-                <div class="price">
-                  ${p.price} AFN
                 </div>
 
-                <div>
-                  ${t('stock')}: ${p.quantity}
-                </div>
 
-                <div class="card-actions">
+                <div class="product-info">
 
-                  <button
-                    class="btn btn-soft"
-                    onclick='studentEditProduct(${JSON.stringify(p)})'
-                  >
-                    ${t('edit')}
-                  </button>
+                  <h3>${esc(p.name||'')}</h3>
 
-                  <button
-                    class="btn btn-danger"
-                    onclick="studentDeleteProduct('${p.id}')"
-                  >
-                    ${t('delete')}
-                  </button>
+                  <div class="muted">
+                    ${esc(p.category||'')}
+                  </div>
+
+                  <div class="product-price">
+                    ${Number(p.price||0).toLocaleString('en-US')} AFN
+                  </div>
+
+                  <div>
+                    ${t('stock')}:
+                    ${Number(p.quantity||0).toLocaleString('en-US')}
+                  </div>
+
+                  ${
+                    p.description||p.address
+                    ?`
+                      <div class="product-description">
+                        ${esc(p.description||p.address)}
+                      </div>
+                    `
+                    :''
+                  }
+
+                  <div class="product-actions">
+
+                    <button
+                      class="btn secondary"
+                      data-edit-product="${esc(p.id)}"
+                    >
+                      ${t('edit')}
+                    </button>
+
+                    <button
+                      class="btn danger"
+                      data-delete-product="${esc(p.id)}"
+                    >
+                      ${t('delete')}
+                    </button>
+
+                  </div>
 
                 </div>
 
               </div>
 
-            </div>
+            `).join('')}
 
-          `).join('')}
+          </div>
+        `
+        :`
+          <div class="card empty">
+            ${t('noProducts')}
+          </div>
+        `;
 
-        </div>
-      `
-      :`
+
+      document.querySelectorAll(
+        '[data-edit-product]'
+      ).forEach(b=>{
+
+        b.onclick=()=>{
+
+          let p=rows.find(
+            x=>String(x.id)===
+            String(b.dataset.editProduct)
+          );
+
+          if(p){
+            editStudentProduct(p);
+          }
+        };
+      });
+
+
+      document.querySelectorAll(
+        '[data-delete-product]'
+      ).forEach(b=>{
+
+        b.onclick=async()=>{
+
+          if(
+            !confirm(
+              lang==='en'
+              ?'Delete this product?'
+              :'دا جنس حذف شي؟'
+            )
+          ){
+            return;
+          }
+
+          try{
+
+            await rpc(
+              'student_delete_product',
+              {
+                p_whatsapp:studentSession.whatsapp,
+                p_pin:studentSession.pin,
+                p_product_id:b.dataset.deleteProduct
+              }
+            );
+
+            toast(t('delete'));
+
+            renderStudentTab('products');
+
+          }catch(x){
+            toast(x.message);
+          }
+        };
+      });
+
+    }catch(x){
+
+      box.innerHTML=`
         <div class="card empty">
-          ${t('noProducts')}
+          ${esc(x.message)}
         </div>
       `;
     }
 
-    if(tab==='orders'){
+    return;
+  }
+}
+const renderStudentTabBase=renderStudentTab;
 
-      let rows=await rpc(
-        'student_orders',
-        {
-          p_whatsapp:studentSession.whatsapp,
-          p_pin:studentSession.pin
-        }
-      );
+renderStudentTab=async function(tab){
 
-      box.innerHTML=`
+  if(tab!=='orders'){
+    return renderStudentTabBase(tab);
+  }
+
+  const box=document.querySelector('#studentTab');
+  if(!box) return;
+
+  try{
+
+    let rows=await rpc(
+      'student_orders',
+      {
+        p_whatsapp:studentSession.whatsapp,
+        p_pin:studentSession.pin
+      }
+    );
+
+    box.innerHTML=`
       <div class="card table-wrap">
 
         <table class="table">
@@ -1021,9 +1550,8 @@ async function renderStudentTab(tab){
               <th>${t('productName')}</th>
               <th>${t('qty')}</th>
               <th>${t('total')}</th>
-              <th>${t('province')}</th>
-              <th>${t('address2')}</th>
               <th>${t('customerPhone')}</th>
+              <th>${t('address2')}</th>
               <th>${t('location')}</th>
               <th>${t('status')}</th>
             </tr>
@@ -1035,19 +1563,25 @@ async function renderStudentTab(tab){
 
               <tr>
 
-                <td>${esc(o.order_no)}</td>
+                <td>${esc(o.order_no||'')}</td>
 
-                <td>${esc(o.product_name)}</td>
+                <td>${esc(o.product_name||'')}</td>
 
-                <td>${o.quantity}</td>
+                <td>
+                  ${Number(o.quantity||0).toLocaleString('en-US')}
+                </td>
 
-                <td>${o.total} AFN</td>
+                <td>
+                  ${Number(o.total||0).toLocaleString('en-US')} AFN
+                </td>
 
-                <td>${esc(o.province)}</td>
+                <td>
+                  ${esc(o.customer_phone||'')}
+                </td>
 
-                <td>${esc(o.address||'')}</td>
-
-                <td>${esc(o.customer_phone)}</td>
+                <td>
+                  ${esc(o.address||'')}
+                </td>
 
                 <td>
 
@@ -1075,7 +1609,7 @@ async function renderStudentTab(tab){
                 <td>
 
                   <select
-                    onchange="studentOrderStatus('${o.id}',this.value)"
+                    data-order-status="${esc(o.id)}"
                   >
 
                     ${
@@ -1110,128 +1644,191 @@ async function renderStudentTab(tab){
         </table>
 
       </div>
-      `;
-    }
+    `;
+
+
+    document.querySelectorAll(
+      '[data-order-status]'
+    ).forEach(select=>{
+
+      select.onchange=async()=>{
+
+        try{
+
+          await rpc(
+            'student_update_order_status',
+            {
+              p_whatsapp:studentSession.whatsapp,
+              p_pin:studentSession.pin,
+              p_order_id:select.dataset.orderStatus,
+              p_status:select.value
+            }
+          );
+
+          toast(t('save'));
+
+        }catch(x){
+          toast(x.message);
+        }
+      };
+    });
 
   }catch(x){
-    toast(x.message);
-  }
-}
 
-async function studentEditProduct(p){
+    box.innerHTML=`
+      <div class="card empty">
+        ${esc(x.message)}
+      </div>
+    `;
+  }
+};
+
+
+async function editStudentProduct(p){
 
   const box=document.querySelector('#studentTab');
 
-  if(!box) return;
+  if(!box||!p) return;
 
   box.innerHTML=`
-  <div class="card edit-card">
+    <div class="card edit-card">
 
-    <h3>
-      ${t('edit')} · ${esc(p.name)}
-    </h3>
+      <h2>
+        ${t('edit')} · ${esc(p.name||'')}
+      </h2>
 
-    <form
-      id="editProductForm"
-      class="form"
-    >
-
-      <div class="field">
-        <label>${t('photo')}</label>
-        <input
-          name="photo"
-          type="file"
-          accept="image/*"
-        >
-      </div>
-
-      <div class="field">
-        <label>${t('productName')}</label>
-        <input
-          name="name"
-          value="${esc(p.name)}"
-          required
-        >
-      </div>
-
-      <div class="grid-2">
+      <form
+        id="editProductForm"
+        class="form"
+      >
 
         <div class="field">
-          <label>${t('qty')}</label>
+
+          <label>${t('photo')}</label>
+
           <input
-            name="qty"
-            type="number"
-            min="0"
-            value="${p.quantity}"
-            required
+            name="photo"
+            type="file"
+            accept="image/*"
           >
+
         </div>
+
 
         <div class="field">
-          <label>${t('price')}</label>
+
+          <label>${t('productName')}</label>
+
           <input
-            name="price"
-            type="number"
-            min="0"
-            value="${p.price}"
+            name="name"
+            value="${esc(p.name||'')}"
             required
           >
+
         </div>
 
-      </div>
 
-      <div class="field">
+        <div class="grid-2">
 
-        <label>${t('category')}</label>
+          <div class="field">
 
-        <select name="category">
+            <label>${t('qty')}</label>
 
-          ${cats.map(c=>`
-            <option
-              ${p.category===c?'selected':''}
+            <input
+              name="qty"
+              type="number"
+              min="0"
+              inputmode="numeric"
+              value="${Number(p.quantity||0)}"
+              required
             >
-              ${c}
-            </option>
-          `).join('')}
 
-        </select>
+          </div>
 
-      </div>
 
-      <div class="field">
-        <label>${t('province')}</label>
-        <input
-          name="province"
-          value="${esc(p.province||'')}"
-          required
-        >
-      </div>
+          <div class="field">
 
-      <div class="field">
-        <label>${t('address2')}</label>
-        <textarea name="address">${esc(p.address||'')}</textarea>
-      </div>
+            <label>${t('price')}</label>
 
-      <div class="card-actions">
+            <input
+              name="price"
+              type="number"
+              min="0"
+              step="0.01"
+              inputmode="decimal"
+              value="${Number(p.price||0)}"
+              required
+            >
 
-        <button class="btn btn-primary">
-          ${t('save')}
-        </button>
+          </div>
 
-        <button
-          type="button"
-          class="btn btn-soft"
-          onclick="renderStudentTab('products')"
-        >
-          ✕
-        </button>
+        </div>
 
-      </div>
 
-    </form>
+        <div class="field">
 
-  </div>
+          <label>${t('category')}</label>
+
+          <select
+            name="category"
+            required
+          >
+
+            ${cats.map(c=>`
+              <option
+                value="${esc(c)}"
+                ${p.category===c?'selected':''}
+              >
+                ${esc(c)}
+              </option>
+            `).join('')}
+
+          </select>
+
+        </div>
+
+
+        <div class="field">
+
+          <label>${t('address2')}</label>
+
+          <textarea
+            name="description"
+            rows="4"
+          >${esc(p.description||p.address||'')}</textarea>
+
+        </div>
+
+
+        <div class="product-actions">
+
+          <button
+            type="submit"
+            class="btn primary"
+          >
+            ${t('save')}
+          </button>
+
+          <button
+            type="button"
+            class="btn secondary"
+            id="cancelEditProduct"
+          >
+            ✕
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
   `;
+
+
+  document.querySelector('#cancelEditProduct').onclick=()=>{
+    renderStudentTab('products');
+  };
+
 
   document.querySelector('#editProductForm').onsubmit=async e=>{
 
@@ -1241,28 +1838,53 @@ async function studentEditProduct(p){
 
       let f=new FormData(e.target);
 
-      let photo=
-        f.get('photo')?.size
-        ?await upload(f.get('photo'),'products')
-        :'';
+      let photo='';
+
+      let photoFile=f.get('photo');
+
+      if(photoFile&&photoFile.size){
+
+        photo=await upload(
+          photoFile,
+          'products'
+        );
+      }
 
       await rpc(
         'student_update_product',
         {
           p_whatsapp:studentSession.whatsapp,
           p_pin:studentSession.pin,
+
           p_product_id:p.id,
-          p_name:f.get('name'),
+
+          p_name:String(
+            f.get('name')||''
+          ).trim(),
+
           p_quantity:+f.get('qty'),
+
           p_price:+f.get('price'),
-          p_category:f.get('category'),
-          p_province:f.get('province'),
-          p_address:f.get('address'),
+
+          p_category:String(
+            f.get('category')||''
+          ),
+
+          p_province:p.province||'',
+
+          p_address:String(
+            f.get('description')||''
+          ).trim(),
+
           p_photo_url:photo
         }
       );
 
-      toast('اصلاحات خوندي شول');
+      toast(
+        lang==='en'
+        ?'Changes saved'
+        :'اصلاحات خوندي شول'
+      );
 
       renderStudentTab('products');
 
@@ -1272,52 +1894,108 @@ async function studentEditProduct(p){
   };
 }
 
-async function studentDeleteProduct(id){
 
-  try{
-
-    await rpc(
-      'student_delete_product',
-      {
-        p_whatsapp:studentSession.whatsapp,
-        p_pin:studentSession.pin,
-        p_product_id:id
-      }
-    );
-
-    renderStudentTab('products');
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-async function studentOrderStatus(id,status){
-
-  try{
-
-    await rpc(
-      'student_update_order_status',
-      {
-        p_whatsapp:studentSession.whatsapp,
-        p_pin:studentSession.pin,
-        p_order_id:id,
-        p_status:status
-      }
-    );
-
-    toast(t('save'));
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-function admin(){
+function adminPage(){
 
   if(!adminPin){
+    return adminLoginPage();
+  }
 
-    document.querySelector('#view').innerHTML=`
+  document.querySelector('#view').innerHTML=`
+    <section class="section">
+
+      <div class="section-head">
+
+        <div>
+          <h2>${t('adminPanel')}</h2>
+          <div class="muted">
+            ${t('brand')}
+          </div>
+        </div>
+
+        <button
+          class="btn danger"
+          id="adminLogout"
+        >
+          ${t('logout')}
+        </button>
+
+      </div>
+
+
+      <div class="student-tabs">
+
+        <button
+          class="btn primary"
+          data-admin-tab="students"
+        >
+          ${t('students')}
+        </button>
+
+        <button
+          class="btn secondary"
+          data-admin-tab="orders"
+        >
+          ${t('orders')}
+        </button>
+
+        <button
+          class="btn secondary"
+          data-admin-tab="products"
+        >
+          ${t('products')}
+        </button>
+
+      </div>
+
+
+      <div id="adminTab"></div>
+
+    </section>
+  `;
+
+
+  document.querySelector('#adminLogout').onclick=()=>{
+
+    adminPin='';
+
+    localStorage.removeItem('adminPin');
+
+    adminLoginPage();
+  };
+
+
+  document.querySelectorAll(
+    '[data-admin-tab]'
+  ).forEach(b=>{
+
+    b.onclick=()=>{
+
+      document.querySelectorAll(
+        '[data-admin-tab]'
+      ).forEach(x=>{
+
+        x.classList.remove('primary');
+        x.classList.add('secondary');
+      });
+
+      b.classList.remove('secondary');
+      b.classList.add('primary');
+
+      renderAdminTab(
+        b.dataset.adminTab
+      );
+    };
+  });
+
+
+  renderAdminTab('students');
+}
+
+
+function adminLoginPage(){
+
+  document.querySelector('#view').innerHTML=`
     <section class="section">
 
       <div
@@ -1328,20 +2006,27 @@ function admin(){
         <h2>${t('admin')}</h2>
 
         <form
-          id="adminLogin"
+          id="adminLoginForm"
           class="form"
         >
 
           <div class="field">
+
             <label>${t('adminPin')}</label>
+
             <input
               name="pin"
               type="password"
+              inputmode="numeric"
               required
             >
+
           </div>
 
-          <button class="btn btn-navy">
+          <button
+            type="submit"
+            class="btn primary"
+          >
             ${t('login')}
           </button>
 
@@ -1350,736 +2035,44 @@ function admin(){
       </div>
 
     </section>
-    `;
-
-    document.querySelector('#adminLogin').onsubmit=async e=>{
-
-      e.preventDefault();
-
-      try{
-
-        let p=new FormData(e.target).get('pin');
-
-        let ok=await rpc(
-          'admin_login',
-          {p_pin:p}
-        );
-
-        if(ok){
-
-          adminPin=p;
-
-          localStorage.setItem(
-            'adminPin',
-            p
-          );
-
-          admin();
-
-        }else{
-
-          toast('PIN غلط دی');
-        }
-
-      }catch(x){
-        toast(x.message);
-      }
-    };
-
-    return;
-  }
-
-  document.querySelector('#view').innerHTML=`
-  <section class="section">
-
-    <div class="section-head">
-
-      <div>
-        <h2>${t('adminPanel')}</h2>
-        <div class="muted">
-          ${t('brand')}
-        </div>
-      </div>
-
-      <button
-        class="btn btn-danger"
-        id="adminLogout"
-      >
-        ${t('logout')}
-      </button>
-
-    </div>
-
-    <div class="tabs">
-
-      <button
-        class="active"
-        data-atab="students"
-      >
-        ${t('students')}
-      </button>
-
-      <button data-atab="orders">
-        ${t('orders')}
-      </button>
-
-      <button data-atab="products">
-        ${t('products')}
-      </button>
-
-    </div>
-
-    <div id="adminTab"></div>
-
-  </section>
   `;
 
-  document.querySelector('#adminLogout').onclick=()=>{
 
-    adminPin='';
+  document.querySelector('#adminLoginForm').onsubmit=async e=>{
 
-    localStorage.removeItem('adminPin');
-
-    admin();
-  };
-
-  document.querySelectorAll('[data-atab]').forEach(b=>{
-
-    b.onclick=()=>{
-
-      document
-        .querySelectorAll('[data-atab]')
-        .forEach(x=>x.classList.remove('active'));
-
-      b.classList.add('active');
-
-      renderAdminTab(b.dataset.atab);
-    };
-
-  });
-
-  renderAdminTab('students');
-}
-
-async function renderAdminTab(tab){
-
-  let box=document.querySelector('#adminTab');
-
-  if(!box) return;
-
-  try{
-
-    if(tab==='students'){
-
-      let rows=await rpc(
-        'admin_students',
-        {p_pin:adminPin}
-      );
-
-      box.innerHTML=`
-      <div class="card table-wrap">
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th>${t('photo')}</th>
-              <th>${t('name')}</th>
-              <th>${t('whatsapp')}</th>
-              <th>${t('status')}</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            ${(rows||[]).map(s=>`
-
-              <tr>
-
-                <td>
-                  <img
-                    src="${s.photo_url||'icon-192.png'}"
-                    style="
-                      width:44px;
-                      height:44px;
-                      border-radius:50%;
-                      object-fit:cover
-                    "
-                  >
-                </td>
-
-                <td>${esc(s.name)}</td>
-
-                <td>${esc(s.whatsapp)}</td>
-
-                <td>
-                  ${
-                    s.approved
-                    ?t('approve')
-                    :t('pending')
-                  }
-                </td>
-
-                <td>
-
-                  <button
-                    class="btn ${
-                      s.approved
-                      ?'btn-danger'
-                      :'btn-primary'
-                    }"
-                    onclick="adminApprove('${s.id}',${!s.approved})"
-                  >
-                    ${
-                      s.approved
-                      ?t('reject')
-                      :t('approve')
-                    }
-                  </button>
-
-                </td>
-
-              </tr>
-
-            `).join('')}
-
-          </tbody>
-
-        </table>
-
-      </div>
-      `;
-    }
-
-    if(tab==='orders'){
-
-      let rows=await rpc(
-        'admin_orders',
-        {p_pin:adminPin}
-      );
-
-      box.innerHTML=`
-      <div class="card table-wrap">
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>${t('productName')}</th>
-              <th>${t('qty')}</th>
-              <th>${t('total')}</th>
-              <th>${t('province')}</th>
-              <th>${t('address2')}</th>
-              <th>${t('location')}</th>
-              <th>${t('status')}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            ${(rows||[]).map(o=>`
-
-              <tr>
-
-                <td>${esc(o.order_no)}</td>
-
-                <td>${esc(o.product_name)}</td>
-
-                <td>${o.quantity}</td>
-
-                <td>${o.total} AFN</td>
-
-                <td>${esc(o.province)}</td>
-
-                <td>${esc(o.address)}</td>
-
-                <td>
-                  ${
-                    o.location
-                    ?`
-                      <a
-                        target="_blank"
-                        href="https://maps.google.com/?q=${encodeURIComponent(o.location)}"
-                      >
-                        Map
-                      </a>
-                    `
-                    :''
-                  }
-                </td>
-
-                <td>
-                  ${t(o.status)}
-                </td>
-
-              </tr>
-
-            `).join('')}
-
-          </tbody>
-
-        </table>
-
-      </div>
-      `;
-    }
-
-    if(tab==='products'){
-
-      let rows=await rpc(
-        'admin_products',
-        {p_pin:adminPin}
-      );
-
-      box.innerHTML=`
-      <div class="product-grid">
-
-        ${(rows||[]).map(p=>`
-
-          <div class="card product">
-
-            <img
-              src="${p.photo_url||'icon-512.png'}"
-            >
-
-            <div class="product-body">
-
-              <h3>${esc(p.name)}</h3>
-
-              <div class="muted">
-                ${esc(p.student_name)}
-              </div>
-
-              <div class="price">
-                ${p.price} AFN
-              </div>
-
-              <div>
-                ${t('stock')}: ${p.quantity}
-              </div>
-
-              <button
-                class="btn btn-danger"
-                style="margin-top:10px"
-                onclick="adminDelete('${p.id}')"
-              >
-                ${t('delete')}
-              </button>
-
-            </div>
-
-          </div>
-
-        `).join('')}
-
-      </div>
-      `;
-    }
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-async function adminApprove(id,approved){
-
-  try{
-
-    await rpc(
-      'admin_approve_student',
-      {
-        p_pin:adminPin,
-        p_student_id:id,
-        p_approved:approved
-      }
-    );
-
-    renderAdminTab('students');
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-async function adminDelete(id){
-
-  try{
-
-    await rpc(
-      'admin_delete_product',
-      {
-        p_pin:adminPin,
-        p_product_id:id
-      }
-    );
-
-    renderAdminTab('products');
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-async function openOrder(pid){
-
-  try{
-
-    let rows=await rpc(
-      'public_products',
-      {p_student_id:null}
-    );
-
-    let p=(rows||[]).find(x=>x.id===pid);
-
-    if(!p) return;
-
-    document.querySelector('#view').innerHTML=`
-    <section class="section">
-
-      <div class="grid-2">
-
-        <div class="card product">
-
-          <img
-            src="${p.photo_url||'icon-512.png'}"
-          >
-
-          <div class="product-body">
-
-            <h2>${esc(p.name)}</h2>
-
-            <div class="price">
-              ${p.price} AFN
-            </div>
-
-            <div>
-              ${t('stock')}: ${p.quantity}
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="card">
-
-          <h2>${t('customerOrder')}</h2>
-
-          <form
-            id="orderForm"
-            class="form"
-          >
-
-            <div class="field">
-              <label>${t('productName')}</label>
-              <input
-                value="${esc(p.name)}"
-                readonly
-              >
-            </div>
-
-            <div class="field">
-              <label>${t('qty')}</label>
-              <input
-                id="orderQty"
-                name="qty"
-                type="number"
-                min="1"
-                max="${p.quantity}"
-                value="1"
-                required
-              >
-            </div>
-
-            <div class="notice">
-              ${t('total')}:
-              <strong id="orderTotal">
-                ${p.price} AFN
-              </strong>
-            </div>
-
-            <div class="field">
-              <label>${t('customerPhone')}</label>
-              <input
-                name="phone"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label>${t('province')}</label>
-              <input
-                name="province"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label>${t('address2')}</label>
-              <textarea
-                name="address"
-                required
-              ></textarea>
-            </div>
-
-            <div class="field">
-
-              <label>${t('location')}</label>
-
-              <div
-                class="actions"
-                style="justify-content:flex-start"
-              >
-
-                <input
-                  id="locInput"
-                  name="location"
-                  readonly
-                  style="flex:1"
-                >
-
-                <button
-                  type="button"
-                  id="getLoc"
-                  class="btn btn-soft"
-                >
-                  ${t('getLocation')}
-                </button>
-
-              </div>
-
-            </div>
-
-            <button class="btn btn-primary">
-              ${t('sendOrder')}
-            </button>
-
-          </form>
-
-        </div>
-
-      </div>
-
-    </section>
-    `;
-
-    let q=document.querySelector('#orderQty');
-
-    q.oninput=()=>{
-
-      document.querySelector('#orderTotal').textContent=
-        (
-          Math.max(1,+q.value||1)*
-          Number(p.price)
-        )
-        .toLocaleString('en-US')
-        +' AFN';
-    };
-
-    document.querySelector('#getLoc').onclick=()=>{
-
-      navigator.geolocation&&
-      navigator.geolocation.getCurrentPosition(
-
-        pos=>{
-
-          document.querySelector('#locInput').value=
-            `${pos.coords.latitude},${pos.coords.longitude}`;
-
-        },
-
-        ()=>toast('لوکیشن اجازه نه لري')
-
-      );
-    };
-
-    document.querySelector('#orderForm').onsubmit=async e=>{
-
-      e.preventDefault();
-
-      try{
-
-        let f=new FormData(e.target);
-
-        let ono=await rpc(
-          'place_order',
-          {
-            p_product_id:p.id,
-            p_quantity:+f.get('qty'),
-            p_customer_phone:f.get('phone'),
-            p_province:f.get('province'),
-            p_address:f.get('address'),
-            p_location:f.get('location')
-          }
-        );
-
-        localStorage.setItem(
-          'lastOrderNo',
-          ono
-        );
-
-        toast(
-          'فرمایش ثبت شو: '+ono
-        );
-
-        setTimeout(
-          ()=>location.hash='track',
-          700
-        );
-
-      }catch(x){
-        toast(x.message);
-      }
-    };
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-async function route(){
-
-  document.documentElement.dir=
-    lang==='en'
-    ?'ltr'
-    :'rtl';
-
-  let select=document.querySelector('#langSelect');
-
-  if(select){
-    select.value=lang;
-  }
-
-  let r=(location.hash||'#shop').slice(1);
-
-  if(r==='home'){
-    location.hash='shop';
-    return;
-  }
-
-  if(r==='shop'){
-    await shop();
-  }
-
-  else if(r==='student'){
-    student();
-  }
-
-  else if(r==='admin'){
-    admin();
-  }
-
-  else if(r==='track'){
-    await trackOrder();
-  }
-
-  else{
-    location.hash='shop';
-    return;
-  }
-
-  document
-    .querySelectorAll('[data-i18n]')
-    .forEach(e=>{
-      e.textContent=t(e.dataset.i18n);
-    });
-}
-
-window.addEventListener(
-  'hashchange',
-  route
-);
-
-setLang(lang);
-
-async function trackOrder(){
-
-  const ono=
-    localStorage.getItem('lastOrderNo')||'';
-
-  document.querySelector('#view').innerHTML=`
-  <section class="section">
-
-    <div class="track-shell">
-
-      <div class="track-icon">
-        📦
-      </div>
-
-      <h2>${t('trackOrder')}</h2>
-
-      <p class="muted">
-        ${
-          ono
-          ?esc(ono)
-          :'فرمایش نمبر نشته'
-        }
-      </p>
-
-      <div
-        id="trackStatus"
-        class="status-hero"
-      >
-        ...
-      </div>
-
-      <button
-        class="btn btn-soft"
-        onclick="location.hash='shop'"
-      >
-        ${t('shop')}
-      </button>
-
-    </div>
-
-  </section>
-  `;
-
-  if(!ono) return;
-
-  const refresh=async()=>{
+    e.preventDefault();
 
     try{
 
-      let x=await rpc(
-        'public_order_status',
-        {p_order_no:ono}
+      let pin=String(
+        new FormData(e.target).get('pin')||''
+      ).trim();
+
+      let ok=await rpc(
+        'admin_login',
+        {
+          p_pin:pin
+        }
       );
 
-      let o=
-        Array.isArray(x)
-        ?x[0]
-        :x;
+      if(!ok){
 
-      if(!o) return;
+        toast('PIN غلط دی');
 
-      let el=
-        document.querySelector('#trackStatus');
-
-      if(el){
-
-        el.innerHTML=`
-          <span class="status-dot"></span>
-
-          <strong>
-            ${t(o.status)}
-          </strong>
-
-          <small>
-            ${esc(o.product_name)}
-            ·
-            ${Number(o.total).toLocaleString('en-US')}
-            AFN
-          </small>
-        `;
+        return;
       }
 
-    }catch(e){}
+      adminPin=pin;
+
+      localStorage.setItem(
+        'adminPin',
+        pin
+      );
+
+      adminPage();
+
+    }catch(x){
+      toast(x.message);
+    }
   };
-
-  await refresh();
-
-  setTimeout(refresh,3000);
-  setTimeout(refresh,7000);
 }
