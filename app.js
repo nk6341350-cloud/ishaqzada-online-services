@@ -478,17 +478,13 @@ async function shop(){
               ${t('orderNow')}
             </button>
 
-            <a
-              class="wa"
-              href="https://wa.me/${whatsappNumber(p.student_whatsapp||'')}?text=${encodeURIComponent(
-                `سلام، زه د «${p.name||''}» په اړه نور معلومات غواړم.
-قیمت: ${Number(p.price||0).toLocaleString('en-US')} AFN
-مهرباني وکړئ د دې جنس په اړه نور معلومات راکړئ.`
-              )}"
-              target="_blank"
+            <button
+              class="btn btn-soft"
+              style="width:100%"
+              onclick='copyProduct(${JSON.stringify(p)})'
             >
-              WhatsApp · ${esc(p.student_name)}
-            </a>
+              📋 ${lang==="en"?"Copy full product":lang==="fa"?"کپی کامل محصول":"مکمل جنس کاپي کړه"}
+            </button>
 
           </div>
 
@@ -530,6 +526,33 @@ async function shop(){
 
   }catch(e){
     toast(e.message);
+  }
+}
+
+
+async function copyProduct(p){
+  const lines=[
+    `${lang==="en"?"Product":lang==="fa"?"محصول":"جنس"}: ${p.name||""}`,
+    `${lang==="en"?"Price":lang==="fa"?"قیمت":"قیمت"}: ${Number(p.price||0).toLocaleString("en-US")} AFN`,
+    `${lang==="en"?"Category":lang==="fa"?"دسته‌بندی":"کټګوري"}: ${p.category||""}`,
+    `${lang==="en"?"Stock":lang==="fa"?"باقی":"پاتې"}: ${p.quantity??""}`
+  ];
+  const description=p.address||p.description||p.province||"";
+  if(description){
+    lines.push(`${lang==="en"?"Description":lang==="fa"?"توضیحات":"تشریحات"}: ${description}`);
+  }
+  if(p.photo_url){
+    lines.push(`${lang==="en"?"Photo":lang==="fa"?"عکس":"عکس"}: ${p.photo_url}`);
+  }
+  const value=lines.join("\n");
+  try{
+    await navigator.clipboard.writeText(value);
+    toast(lang==="en"?"Product copied":lang==="fa"?"محصول کامل کپی شد":"مکمل جنس کاپي شو");
+  }catch(e){
+    const ta=document.createElement("textarea");
+    ta.value=value; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+    toast(lang==="en"?"Product copied":lang==="fa"?"محصول کامل کپی شد":"مکمل جنس کاپي شو");
   }
 }
 
@@ -1428,17 +1451,13 @@ function admin(){
 
       <button
         class="active"
-        data-atab="students"
+        data-atab="products"
       >
-        ${t('students')}
+        ${t('products')}
       </button>
 
       <button data-atab="orders">
         ${t('orders')}
-      </button>
-
-      <button data-atab="products">
-        ${t('products')}
       </button>
 
     </div>
@@ -1472,7 +1491,7 @@ function admin(){
 
   });
 
-  renderAdminTab('students');
+  renderAdminTab('products');
 }
 
 async function renderAdminTab(tab){
@@ -1648,6 +1667,20 @@ async function renderAdminTab(tab){
       );
 
       box.innerHTML=`
+      <div class="card" style="margin-bottom:16px">
+        <h3>${lang==="en"?"Add Product":lang==="fa"?"ثبت محصول جدید":"نوی جنس ثبت"}</h3>
+        <form id="adminProductForm" class="form">
+          <div class="field"><label>${t('photo')}</label><input name="photo" type="file" accept="image/*" required></div>
+          <div class="field"><label>${t('productName')}</label><input name="name" required></div>
+          <div class="grid-2">
+            <div class="field"><label>${t('qty')}</label><input name="qty" type="number" min="0" required></div>
+            <div class="field"><label>${t('price')}</label><input name="price" type="number" min="0" required></div>
+          </div>
+          <div class="field"><label>${t('category')}</label><select name="category">${cats.map(c=>`<option>${c}</option>`).join('')}</select></div>
+          <div class="field"><label>${lang==="en"?"Description":lang==="fa"?"توضیحات":"تشریحات"}</label><textarea name="address"></textarea></div>
+          <button class="btn btn-primary">${t('save')}</button>
+        </form>
+      </div>
       <div class="product-grid">
 
         ${(rows||[]).map(p=>`
@@ -1690,6 +1723,31 @@ async function renderAdminTab(tab){
 
       </div>
       `;
+
+      const adminProductForm=document.querySelector('#adminProductForm');
+      if(adminProductForm){
+        adminProductForm.onsubmit=async e=>{
+          e.preventDefault();
+          try{
+            const f=new FormData(e.target);
+            const photo=await upload(f.get('photo'),'products');
+            await rpc('admin_add_product',{
+              p_pin:adminPin,
+              p_name:f.get('name'),
+              p_quantity:+f.get('qty'),
+              p_price:+f.get('price'),
+              p_category:f.get('category'),
+              p_province:'',
+              p_address:f.get('address'),
+              p_photo_url:photo
+            });
+            toast(lang==="en"?"Product saved":lang==="fa"?"محصول ثبت شد":"جنس ثبت شو");
+            renderAdminTab('products');
+          }catch(x){
+            toast(x.message);
+          }
+        };
+      }
     }
 
   }catch(x){
@@ -1966,10 +2024,6 @@ async function route(){
 
   if(r==='shop'){
     await shop();
-  }
-
-  else if(r==='student'){
-    student();
   }
 
   else if(r==='admin'){
