@@ -372,6 +372,15 @@ let rows=await rpc(
             <div class="price">
               ${Number(p.price).toLocaleString('en-US')} AFN
             </div>
+            <div class="free-delivery-notice">
+              <strong>🚚 ${lang==="en"?"Free Delivery":lang==="fa"?"ارسال رایگان":"وړیا ډلیوري"}</strong>
+              <div>${lang==="en"
+                ?"Delivery to your province, home, office, or shop is completely free. Your order will reach you within 24 hours."
+                :lang==="fa"
+                ?"ارسال تا ولایت، خانه، دفتر یا دکان شما کاملاً رایگان است. سفارش شما تا ۲۴ ساعت به شما می‌رسد."
+                :"ستاسو تر ولایت، کور، دفتر یا دوکان پورې ډلیوري بالکل وړیا ده. ستاسو فرمایش به تر ۲۴ ساعتونو پورې در ورسېږي."}</div>
+            </div>
+
 
             <div class="stock">
               ${t('stock')}: ${p.quantity}
@@ -619,7 +628,6 @@ async function renderAdminTab(tab){
           <div class="field"><label>${t('photo')}</label><input name="photo" type="file" accept="image/*" required></div>
           <div class="field"><label>${t('productName')}</label><input name="name" required></div>
           <div class="grid-2">
-            <div class="field"><label>${t('qty')}</label><input name="qty" type="number" min="0" required></div>
             <div class="field"><label>${t('price')}</label><input name="price" type="number" min="0" required></div>
           </div>
           <div class="field"><label>${t('category')}</label><select name="category">${cats.map(c=>`<option>${c}</option>`).join('')}</select></div>
@@ -675,7 +683,7 @@ async function renderAdminTab(tab){
             await rpc('admin_add_product',{
               p_pin:adminPin,
               p_name:f.get('name'),
-              p_quantity:+f.get('qty'),
+              p_quantity:1,
               p_price:+f.get('price'),
               p_category:f.get('category'),
               p_province:'',
