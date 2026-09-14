@@ -40,7 +40,7 @@ const catPics={
 
 const tr={
 ps:{
-brand:'اسحاقزاده آنلاین خدمات',
+brand:'اسحاقزاده انلاین سټور',
 install:'نصب اپ',
 home:'کور',
 shop:'بازار',
@@ -104,7 +104,7 @@ openMap:'لوکیشن خلاص کړه',
 noLocation:'لوکیشن نشته'
 },
 fa:{
-brand:'خدمات آنلاین اسحاق‌زاده',
+brand:'فروشگاه آنلاین اسحاق‌زاده',
 install:'نصب اپ',
 shop:'بازار',
 student:'شاگرد',
@@ -165,7 +165,7 @@ openMap:'باز کردن موقعیت',
 noLocation:'موقعیت ثبت نشده'
 },
 en:{
-brand:'Ishaqzada Online Services',
+brand:'Ishaqzada Online Store',
 install:'Install App',
 shop:'Shop',
 student:'Student',
@@ -471,19 +471,11 @@ async function shop(){
             </p>
 
             <button
-              class="btn btn-navy"
-              style="width:100%;margin-bottom:8px"
-              onclick="openOrder('${p.id}')"
-            >
-              ${t('orderNow')}
-            </button>
-
-            <button
               class="btn btn-soft"
               style="width:100%"
               onclick='copyProduct(${JSON.stringify(p)})'
             >
-              📋 ${lang==="en"?"Copy full product":lang==="fa"?"کپی کامل محصول":"مکمل جنس کاپي کړه"}
+              📋 ${lang==="en"?"Copy product — send it to the shopkeeper to order":lang==="fa"?"محصول را کپی کنید — برای سفارش به فروشنده بفرستید":"جنس کاپي کړه — د اډر کولو دپاره یې دوکاندار ته ولېږه"}
             </button>
 
           </div>
@@ -2143,3 +2135,4 @@ async function trackOrder(){
   setTimeout(refresh,3000);
   setTimeout(refresh,7000);
 }
+\n\n// Ishaqzada AI help button\n(function setupIshaqzadaAI(){\n  function add(){\n    if(document.getElementById('ishaqzadaAiBtn')) return;\n    const b=document.createElement('button'); b.id='ishaqzadaAiBtn'; b.textContent='🤖 AI';\n    b.style.cssText='position:fixed;left:18px;bottom:18px;z-index:9999;border:0;border-radius:999px;padding:14px 18px;background:#0b2348;color:white;font-weight:800;box-shadow:0 8px 24px #0003';\n    document.body.appendChild(b);\n    b.onclick=()=>{\n      const q=prompt(lang==='en'?'Ask about Ishaqzada Online Store:':lang==='fa'?'درباره فروشگاه آنلاین اسحاق‌زاده بپرسید:':'د اسحاقزاده انلاین سټور په اړه پوښتنه وکړه:');\n      if(!q) return;\n      const a=lang==='en'?'Ishaqzada Online Store lets customers browse products, copy a product and send it to the shopkeeper to order. Use the menu for Admin access and the Install App button to add the store to your phone.':lang==='fa'?'فروشگاه آنلاین اسحاق‌زاده برای دیدن محصولات است. محصول را کپی کنید و برای سفارش به فروشنده بفرستید. از منو به ادمین بروید و با دکمه نصب اپ، فروشگاه را به موبایل اضافه کنید.':'اسحاقزاده انلاین سټور کې مشتریان جنسونه ګوري. د خوښې جنس کاپي کړه او د اډر کولو لپاره یې دوکاندار ته ولېږه. له مینو څخه اډمین ته تللای شې او د «نصب اپ» تڼۍ له لارې یې په موبایل کې اضافه کولای شې.';\n      alert('🤖 '+a);\n    };\n  }\n  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',add); else add();\n})();\n
