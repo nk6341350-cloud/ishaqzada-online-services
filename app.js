@@ -44,25 +44,18 @@ brand:'اسحاقزاده انلاین سټور',
 install:'نصب اپ',
 home:'کور',
 shop:'بازار',
-student:'شاګرد',
 admin:'اډمین',
 products:'محصولات',
 all:'ټول',
 search:'لټون...',
 noProducts:'تر اوسه محصول نشته.',
-register:'نوی شاګرد ثبت',
-login:'شاګرد ننوتل',
 name:'نوم',
 whatsapp:'WhatsApp شمېره',
 photo:'عکس',
 pin:'PIN کوډ',
 submit:'ثبت',
 phone:'شمېره',
-pending:'ستاسو حساب د اډمین تایید ته منتظر دی.',
-studentPanel:'د شاګرد صفحه',
 addProduct:'جنس ثبت',
-myProducts:'زما جنسونه',
-myOrders:'فرمایشونه',
 productName:'د جنس نوم',
 qty:'تعداد',
 price:'قیمت (AFN)',
@@ -72,60 +65,31 @@ category:'کټګوري',
 save:'ثبت',
 adminPanel:'د اډمین صفحه',
 adminPin:'اډمین PIN',
-approve:'تایید',
-reject:'رد',
-students:'شاګردان',
-orders:'فرمایشونه',
-orderNow:'فرمایش وکړئ',
-customerOrder:'د مشتری فرمایش',
-customerPhone:'د مشتری شمېره',
-location:'اوسنی لوکیشن',
-getLocation:'لوکیشن واخله',
-total:'ټول قیمت',
-sendOrder:'فرمایش ثبت',
 stock:'پاتې',
 edit:'ایډیټ',
 delete:'حذف',
 logout:'وتل',
 address:'ادرس: د شهیدانو چوک، عمري تجارتي مارکیټ، کندهار، افغانستان',
-newOrders:'نوي فرمایشونه',
-sales:'ټول خرڅلاو',
-uniqueShop:'زما د دوکان لینک',
 copy:'کاپي',
-status:'حالت',
-new:'نوی',
-ready:'تیار',
-sent:'لېږل شوی',
-delivered:'تسلیم شوی',
-rejected:'رد شوی',
-trackOrder:'د فرمایش حالت',
 complaint:'د شکایت شمېره',
-openMap:'لوکیشن خلاص کړه',
 noLocation:'لوکیشن نشته'
 },
 fa:{
 brand:'فروشگاه آنلاین اسحاق‌زاده',
 install:'نصب اپ',
 shop:'بازار',
-student:'شاگرد',
 admin:'ادمین',
 products:'محصولات',
 all:'همه',
 search:'جستجو...',
 noProducts:'هنوز محصولی ثبت نشده.',
-register:'ثبت شاگرد جدید',
-login:'ورود شاگرد',
 name:'نام',
 whatsapp:'شماره واتساپ',
 photo:'عکس',
 pin:'PIN',
 submit:'ثبت',
 phone:'شماره',
-pending:'حساب شما در انتظار تأیید ادمین است.',
-studentPanel:'صفحه شاگرد',
 addProduct:'ثبت محصول',
-myProducts:'محصولات من',
-myOrders:'سفارش‌ها',
 productName:'نام محصول',
 qty:'تعداد',
 price:'قیمت (AFN)',
@@ -135,58 +99,31 @@ category:'دسته‌بندی',
 save:'ثبت',
 adminPanel:'صفحه ادمین',
 adminPin:'PIN ادمین',
-approve:'تأیید',
-reject:'رد',
-students:'شاگردان',
-orders:'سفارش‌ها',
-orderNow:'سفارش',
-customerOrder:'سفارش مشتری',
-customerPhone:'شماره مشتری',
-location:'موقعیت فعلی',
-getLocation:'گرفتن موقعیت',
-total:'قیمت کل',
-sendOrder:'ثبت سفارش',
 stock:'باقی',
 edit:'ویرایش',
 delete:'حذف',
 logout:'خروج',
 address:'آدرس: چهارراه شهیدان، مارکیت تجارتی عمری، قندهار، افغانستان',
-uniqueShop:'لینک فروشگاه من',
 copy:'کپی',
-status:'حالت',
-new:'جدید',
-ready:'آماده',
-sent:'ارسال شده',
-delivered:'تحویل شده',
-rejected:'رد شده',
-trackOrder:'وضعیت سفارش',
 complaint:'شماره شکایت',
-openMap:'باز کردن موقعیت',
 noLocation:'موقعیت ثبت نشده'
 },
 en:{
 brand:'Ishaqzada Online Store',
 install:'Install App',
 shop:'Shop',
-student:'Student',
 admin:'Admin',
 products:'Products',
 all:'All',
 search:'Search...',
 noProducts:'No products yet.',
-register:'New Student Registration',
-login:'Student Login',
 name:'Name',
 whatsapp:'WhatsApp Number',
 photo:'Photo',
 pin:'PIN',
 submit:'Register',
 phone:'Phone',
-pending:'Your account is waiting for admin approval.',
-studentPanel:'Student Dashboard',
 addProduct:'Add Product',
-myProducts:'My Products',
-myOrders:'Orders',
 productName:'Product Name',
 qty:'Quantity',
 price:'Price (AFN)',
@@ -196,40 +133,19 @@ category:'Category',
 save:'Save',
 adminPanel:'Admin Dashboard',
 adminPin:'Admin PIN',
-approve:'Approve',
-reject:'Reject',
-students:'Students',
-orders:'Orders',
-orderNow:'Order Now',
-customerOrder:'Customer Order',
-customerPhone:'Customer Phone',
-location:'Current Location',
-getLocation:'Get Location',
-total:'Total',
-sendOrder:'Place Order',
 stock:'Stock',
 edit:'Edit',
 delete:'Delete',
 logout:'Logout',
 address:'Address: Shahidano Square, Omari Commercial Market, Kandahar, Afghanistan',
-uniqueShop:'My Shop Link',
 copy:'Copy',
-status:'Status',
-new:'New',
-ready:'Ready',
-sent:'Sent',
-delivered:'Delivered',
-rejected:'Rejected',
-trackOrder:'Order Status',
 complaint:'Complaint Number',
-openMap:'Open Location',
 noLocation:'No location'
 }
 };
 
 let lang=localStorage.getItem('lang')||'ps';
 let deferredPrompt=null;
-let studentSession=JSON.parse(localStorage.getItem('studentSession')||'null');
 let adminPin=localStorage.getItem('adminPin')||'';
 
 function t(k){
@@ -415,14 +331,9 @@ async function shop(){
   `;
 
   try{
-
-    let sid=
-      new URLSearchParams(location.search)
-      .get('shop')||null;
-
-    let rows=await rpc(
+let rows=await rpc(
       'public_products',
-      {p_student_id:sid}
+      {p_student_id:null}
     );
 
     let all=rows||[];
@@ -469,13 +380,12 @@ async function shop(){
             <p class="muted">
               ${esc(p.province)}
             </p>
-
-            <button
+<button
               class="btn btn-soft"
               style="width:100%"
               onclick='copyProduct(${JSON.stringify(p)})'
             >
-              📋 ${lang==="en"?"Copy product — send it to the shopkeeper to order":lang==="fa"?"محصول را کپی کنید — برای سفارش به فروشنده بفرستید":"جنس کاپي کړه — د اډر کولو دپاره یې دوکاندار ته ولېږه"}
+              📋 ${lang==="en"?"Copy full product":lang==="fa"?"کپی کامل محصول":"مکمل جنس کاپي کړه"}
             </button>
 
           </div>
@@ -539,806 +449,12 @@ async function copyProduct(p){
   const value=lines.join("\n");
   try{
     await navigator.clipboard.writeText(value);
-    toast(lang==="en"?"Product copied":lang==="fa"?"محصول کامل کپی شد":"مکمل جنس کاپي شو");
+    toast(lang==="en"?"Product copied":lang==="fa"?"محصول کامل کپی شد":"جنس کاپي شو");
   }catch(e){
     const ta=document.createElement("textarea");
     ta.value=value; document.body.appendChild(ta); ta.select();
     document.execCommand("copy"); ta.remove();
-    toast(lang==="en"?"Product copied":lang==="fa"?"محصول کامل کپی شد":"مکمل جنس کاپي شو");
-  }
-}
-
-function student(){
-
-  if(studentSession){
-    return studentPanel();
-  }
-
-  document.querySelector('#view').innerHTML=`
-  <section class="section">
-
-    <div class="grid-2">
-
-      <div class="card">
-
-        <h2>${t('register')}</h2>
-
-        <form id="regForm" class="form">
-
-          <div class="field">
-            <label>${t('name')}</label>
-            <input name="name" required>
-          </div>
-
-          <div class="field">
-            <label>${t('whatsapp')}</label>
-            <input name="whatsapp" required>
-          </div>
-
-          <div class="field">
-            <label>${t('photo')}</label>
-            <input
-              name="photo"
-              type="file"
-              accept="image/*"
-              required
-            >
-          </div>
-
-          <div class="field">
-            <label>${t('pin')}</label>
-            <input
-              name="pin"
-              type="password"
-              minlength="4"
-              required
-            >
-          </div>
-
-          <button class="btn btn-primary">
-            ${t('submit')}
-          </button>
-
-          <div
-            id="regSuccess"
-            class="success-box hidden"
-          >
-            ✅ ته ثبت شوې. ستا تایید به اډمین کوي؛
-            له تایید وروسته به جنس پورته کولای شې.
-          </div>
-
-        </form>
-
-      </div>
-
-      <div class="card">
-
-        <h2>${t('login')}</h2>
-
-        <form id="loginForm" class="form">
-
-          <div class="field">
-            <label>${t('phone')}</label>
-            <input name="phone" required>
-          </div>
-
-          <div class="field">
-            <label>${t('pin')}</label>
-            <input
-              name="pin"
-              type="password"
-              required
-            >
-          </div>
-
-          <button class="btn btn-navy">
-            ${t('login')}
-          </button>
-
-        </form>
-
-      </div>
-
-    </div>
-
-  </section>
-  `;
-
-  document.querySelector('#regForm').onsubmit=async e=>{
-
-    e.preventDefault();
-
-    try{
-
-      let fd=new FormData(e.target);
-
-      let photo=await upload(
-        fd.get('photo'),
-        'students'
-      );
-
-      await rpc(
-        'student_register',
-        {
-          p_name:fd.get('name'),
-          p_whatsapp:fd.get('whatsapp'),
-          p_photo_url:photo,
-          p_pin:fd.get('pin')
-        }
-      );
-
-      e.target.reset();
-
-      document
-        .querySelector('#regSuccess')
-        .classList.remove('hidden');
-
-      toast(
-        'ته ثبت شوې؛ ستا تایید به اډمین کوي، بیا به جنس پورته کولای شې.'
-      );
-
-    }catch(x){
-      toast(x.message);
-    }
-  };
-
-  document.querySelector('#loginForm').onsubmit=async e=>{
-
-    e.preventDefault();
-
-    try{
-
-      let fd=new FormData(e.target);
-
-      let rows=await rpc(
-        'student_login',
-        {
-          p_whatsapp:fd.get('phone'),
-          p_pin:fd.get('pin')
-        }
-      );
-
-      let s=rows?.[0];
-
-      if(!s){
-        toast('شمېره یا PIN غلط دی');
-        return;
-      }
-
-      if(!s.approved){
-        toast(t('pending'));
-        return;
-      }
-
-      studentSession={
-        ...s,
-        pin:fd.get('pin')
-      };
-
-      localStorage.setItem(
-        'studentSession',
-        JSON.stringify(studentSession)
-      );
-
-      student();
-
-    }catch(x){
-      toast(x.message);
-    }
-  };
-}
-
-function studentPanel(){
-
-  document.querySelector('#view').innerHTML=`
-  <section class="section">
-
-    <div class="section-head">
-
-      <div>
-        <h2>${t('studentPanel')}</h2>
-
-        <div class="shop-owner">
-          <img
-            src="${studentSession.photo_url||'icon-192.png'}"
-          >
-          <strong>
-            ${esc(studentSession.name)}
-          </strong>
-        </div>
-      </div>
-
-      <button
-        class="btn btn-danger"
-        id="studentLogout"
-      >
-        ${t('logout')}
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <div class="section-head">
-        <h3>${t('uniqueShop')}</h3>
-        <button
-          class="btn btn-soft"
-          id="copyShop"
-        >
-          ${t('copy')}
-        </button>
-      </div>
-
-      <input
-        id="shopLink"
-        readonly
-        style="
-          width:100%;
-          padding:12px;
-          border:1px solid #ddd;
-          border-radius:12px
-        "
-        value="${
-          location.origin+
-          location.pathname+
-          '?shop='+
-          studentSession.id+
-          '#shop'
-        }"
-      >
-
-    </div>
-
-    <div
-      class="tabs"
-      style="margin-top:16px"
-    >
-
-      <button
-        class="active"
-        data-stab="add"
-      >
-        ${t('addProduct')}
-      </button>
-
-      <button data-stab="products">
-        ${t('myProducts')}
-      </button>
-
-      <button data-stab="orders">
-        ${t('myOrders')}
-      </button>
-
-    </div>
-
-    <div id="studentTab"></div>
-
-  </section>
-  `;
-
-  document.querySelector('#studentLogout').onclick=()=>{
-    studentSession=null;
-    localStorage.removeItem('studentSession');
-    student();
-  };
-
-  document.querySelector('#copyShop').onclick=()=>{
-    navigator.clipboard
-      .writeText(
-        document.querySelector('#shopLink').value
-      )
-      .then(()=>toast(t('copy')));
-  };
-
-  document.querySelectorAll('[data-stab]').forEach(b=>{
-
-    b.onclick=()=>{
-
-      document
-        .querySelectorAll('[data-stab]')
-        .forEach(x=>x.classList.remove('active'));
-
-      b.classList.add('active');
-
-      renderStudentTab(b.dataset.stab);
-    };
-
-  });
-
-  renderStudentTab('add');
-}
-
-async function renderStudentTab(tab){
-
-  let box=document.querySelector('#studentTab');
-
-  if(!box) return;
-
-  if(tab==='add'){
-
-    box.innerHTML=`
-    <div class="card">
-
-      <form
-        id="productForm"
-        class="form"
-      >
-
-        <div class="field">
-          <label>${t('photo')}</label>
-          <input
-            name="photo"
-            type="file"
-            accept="image/*"
-            required
-          >
-        </div>
-
-        <div class="field">
-          <label>${t('productName')}</label>
-          <input name="name" required>
-        </div>
-
-        <div class="grid-2">
-
-          <div class="field">
-            <label>${t('qty')}</label>
-            <input
-              name="qty"
-              type="number"
-              min="0"
-              required
-            >
-          </div>
-
-          <div class="field">
-            <label>${t('price')}</label>
-            <input
-              name="price"
-              type="number"
-              min="0"
-              required
-            >
-          </div>
-
-        </div>
-
-        <div class="field">
-
-          <label>${t('category')}</label>
-
-          <select name="category">
-            ${cats.map(c=>`
-              <option>${c}</option>
-            `).join('')}
-          </select>
-
-        </div>
-
-        <div class="field">
-          <label>تشریحات</label>
-          <textarea name="address"></textarea>
-        </div>
-
-        <button class="btn btn-primary">
-          ${t('save')}
-        </button>
-
-      </form>
-
-    </div>
-    `;
-
-    document.querySelector('#productForm').onsubmit=async e=>{
-
-      e.preventDefault();
-
-      try{
-
-        let f=new FormData(e.target);
-
-        let photo=await upload(
-          f.get('photo'),
-          'products'
-        );
-
-        await rpc(
-          'student_add_product',
-          {
-            p_whatsapp:studentSession.whatsapp,
-            p_pin:studentSession.pin,
-            p_name:f.get('name'),
-            p_quantity:+f.get('qty'),
-            p_price:+f.get('price'),
-            p_category:f.get('category'),
-            p_province:'',
-            p_address:f.get('address'),
-            p_photo_url:photo
-          }
-        );
-
-        toast(t('save'));
-
-        renderStudentTab('products');
-
-      }catch(x){
-        toast(x.message);
-      }
-    };
-
-    return;
-  }
-
-  try{
-
-    if(tab==='products'){
-
-      let rows=await rpc(
-        'student_products',
-        {
-          p_whatsapp:studentSession.whatsapp,
-          p_pin:studentSession.pin
-        }
-      );
-
-      box.innerHTML=rows?.length
-      ?`
-        <div class="product-grid">
-
-          ${rows.map(p=>`
-
-            <div class="card product">
-
-              <img
-                src="${p.photo_url||'icon-512.png'}"
-              >
-
-              <div class="product-body">
-
-                <h3>${esc(p.name)}</h3>
-
-                <div class="price">
-                  ${p.price} AFN
-                </div>
-
-                <div>
-                  ${t('stock')}: ${p.quantity}
-                </div>
-
-                <div class="card-actions">
-
-                  <button
-                    class="btn btn-soft"
-                    onclick='studentEditProduct(${JSON.stringify(p)})'
-                  >
-                    ${t('edit')}
-                  </button>
-
-                  <button
-                    class="btn btn-danger"
-                    onclick="studentDeleteProduct('${p.id}')"
-                  >
-                    ${t('delete')}
-                  </button>
-
-                </div>
-
-              </div>
-
-            </div>
-
-          `).join('')}
-
-        </div>
-      `
-      :`
-        <div class="card empty">
-          ${t('noProducts')}
-        </div>
-      `;
-    }
-
-    if(tab==='orders'){
-
-      let rows=await rpc(
-        'student_orders',
-        {
-          p_whatsapp:studentSession.whatsapp,
-          p_pin:studentSession.pin
-        }
-      );
-
-      box.innerHTML=`
-      <div class="card table-wrap">
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>${t('productName')}</th>
-              <th>${t('qty')}</th>
-              <th>${t('total')}</th>
-              <th>${t('province')}</th>
-              <th>${t('address2')}</th>
-              <th>${t('customerPhone')}</th>
-              <th>${t('location')}</th>
-              <th>${t('status')}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            ${(rows||[]).map(o=>`
-
-              <tr>
-
-                <td>${esc(o.order_no)}</td>
-
-                <td>${esc(o.product_name)}</td>
-
-                <td>${o.quantity}</td>
-
-                <td>${o.total} AFN</td>
-
-                <td>${esc(o.province)}</td>
-
-                <td>${esc(o.address||'')}</td>
-
-                <td>${esc(o.customer_phone)}</td>
-
-                <td>
-
-                  ${
-                    o.location
-                    ?`
-                      <a
-                        class="map-btn"
-                        target="_blank"
-                        rel="noopener"
-                        href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.location)}"
-                      >
-                        📍 ${t('openMap')}
-                      </a>
-                    `
-                    :`
-                      <span class="muted">
-                        ${t('noLocation')}
-                      </span>
-                    `
-                  }
-
-                </td>
-
-                <td>
-
-                  <select
-                    onchange="studentOrderStatus('${o.id}',this.value)"
-                  >
-
-                    ${
-                      [
-                        'new',
-                        'ready',
-                        'sent',
-                        'delivered',
-                        'rejected'
-                      ]
-                      .map(s=>`
-                        <option
-                          value="${s}"
-                          ${o.status===s?'selected':''}
-                        >
-                          ${t(s)}
-                        </option>
-                      `)
-                      .join('')
-                    }
-
-                  </select>
-
-                </td>
-
-              </tr>
-
-            `).join('')}
-
-          </tbody>
-
-        </table>
-
-      </div>
-      `;
-    }
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-async function studentEditProduct(p){
-
-  const box=document.querySelector('#studentTab');
-
-  if(!box) return;
-
-  box.innerHTML=`
-  <div class="card edit-card">
-
-    <h3>
-      ${t('edit')} · ${esc(p.name)}
-    </h3>
-
-    <form
-      id="editProductForm"
-      class="form"
-    >
-
-      <div class="field">
-        <label>${t('photo')}</label>
-        <input
-          name="photo"
-          type="file"
-          accept="image/*"
-        >
-      </div>
-
-      <div class="field">
-        <label>${t('productName')}</label>
-        <input
-          name="name"
-          value="${esc(p.name)}"
-          required
-        >
-      </div>
-
-      <div class="grid-2">
-
-        <div class="field">
-          <label>${t('qty')}</label>
-          <input
-            name="qty"
-            type="number"
-            min="0"
-            value="${p.quantity}"
-            required
-          >
-        </div>
-
-        <div class="field">
-          <label>${t('price')}</label>
-          <input
-            name="price"
-            type="number"
-            min="0"
-            value="${p.price}"
-            required
-          >
-        </div>
-
-      </div>
-
-      <div class="field">
-
-        <label>${t('category')}</label>
-
-        <select name="category">
-
-          ${cats.map(c=>`
-            <option
-              ${p.category===c?'selected':''}
-            >
-              ${c}
-            </option>
-          `).join('')}
-
-        </select>
-
-      </div>
-
-      <div class="field">
-        <label>تشریحات</label>
-        <textarea name="address">${esc(p.address||'')}</textarea>
-      </div>
-
-      <div class="card-actions">
-
-        <button class="btn btn-primary">
-          ${t('save')}
-        </button>
-
-        <button
-          type="button"
-          class="btn btn-soft"
-          onclick="renderStudentTab('products')"
-        >
-          ✕
-        </button>
-
-      </div>
-
-    </form>
-
-  </div>
-  `;
-
-  document.querySelector('#editProductForm').onsubmit=async e=>{
-
-    e.preventDefault();
-
-    try{
-
-      let f=new FormData(e.target);
-
-      let photo=
-        f.get('photo')?.size
-        ?await upload(f.get('photo'),'products')
-        :'';
-
-      await rpc(
-        'student_update_product',
-        {
-          p_whatsapp:studentSession.whatsapp,
-          p_pin:studentSession.pin,
-          p_product_id:p.id,
-          p_name:f.get('name'),
-          p_quantity:+f.get('qty'),
-          p_price:+f.get('price'),
-          p_category:f.get('category'),
-          p_province:p.province||'',
-          p_address:f.get('address'),
-          p_photo_url:photo
-        }
-      );
-
-      toast('اصلاحات خوندي شول');
-
-      renderStudentTab('products');
-
-    }catch(x){
-      toast(x.message);
-    }
-  };
-}
-
-async function studentDeleteProduct(id){
-
-  try{
-
-    await rpc(
-      'student_delete_product',
-      {
-        p_whatsapp:studentSession.whatsapp,
-        p_pin:studentSession.pin,
-        p_product_id:id
-      }
-    );
-
-    renderStudentTab('products');
-
-  }catch(x){
-    toast(x.message);
-  }
-}
-
-async function studentOrderStatus(id,status){
-
-  try{
-
-    await rpc(
-      'student_update_order_status',
-      {
-        p_whatsapp:studentSession.whatsapp,
-        p_pin:studentSession.pin,
-        p_order_id:id,
-        p_status:status
-      }
-    );
-
-    toast(t('save'));
-
-  }catch(x){
-    toast(x.message);
+    toast(lang==="en"?"Product copied":lang==="fa"?"محصول کامل کپی شد":"جنس کاپي شو");
   }
 }
 
@@ -1447,11 +563,6 @@ function admin(){
       >
         ${t('products')}
       </button>
-
-      <button data-atab="orders">
-        ${t('orders')}
-      </button>
-
     </div>
 
     <div id="adminTab"></div>
@@ -1494,163 +605,6 @@ async function renderAdminTab(tab){
 
   try{
 
-    if(tab==='students'){
-
-      let rows=await rpc(
-        'admin_students',
-        {p_pin:adminPin}
-      );
-
-      box.innerHTML=`
-      <div class="card table-wrap">
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th>${t('photo')}</th>
-              <th>${t('name')}</th>
-              <th>${t('whatsapp')}</th>
-              <th>${t('status')}</th>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            ${(rows||[]).map(s=>`
-
-              <tr>
-
-                <td>
-                  <img
-                    src="${s.photo_url||'icon-192.png'}"
-                    style="
-                      width:44px;
-                      height:44px;
-                      border-radius:50%;
-                      object-fit:cover
-                    "
-                  >
-                </td>
-
-                <td>${esc(s.name)}</td>
-
-                <td>${esc(s.whatsapp)}</td>
-
-                <td>
-                  ${
-                    s.approved
-                    ?t('approve')
-                    :t('pending')
-                  }
-                </td>
-
-                <td>
-
-                  <button
-                    class="btn ${
-                      s.approved
-                      ?'btn-danger'
-                      :'btn-primary'
-                    }"
-                    onclick="adminApprove('${s.id}',${!s.approved})"
-                  >
-                    ${
-                      s.approved
-                      ?t('reject')
-                      :t('approve')
-                    }
-                  </button>
-
-                </td>
-
-              </tr>
-
-            `).join('')}
-
-          </tbody>
-
-        </table>
-
-      </div>
-      `;
-    }
-
-    if(tab==='orders'){
-
-      let rows=await rpc(
-        'admin_orders',
-        {p_pin:adminPin}
-      );
-
-      box.innerHTML=`
-      <div class="card table-wrap">
-
-        <table class="table">
-
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>${t('productName')}</th>
-              <th>${t('qty')}</th>
-              <th>${t('total')}</th>
-              <th>${t('province')}</th>
-              <th>${t('address2')}</th>
-              <th>${t('location')}</th>
-              <th>${t('status')}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            ${(rows||[]).map(o=>`
-
-              <tr>
-
-                <td>${esc(o.order_no)}</td>
-
-                <td>${esc(o.product_name)}</td>
-
-                <td>${o.quantity}</td>
-
-                <td>${o.total} AFN</td>
-
-                <td>${esc(o.province)}</td>
-
-                <td>${esc(o.address)}</td>
-
-                <td>
-                  ${
-                    o.location
-                    ?`
-                      <a
-                        target="_blank"
-                        href="https://maps.google.com/?q=${encodeURIComponent(o.location)}"
-                      >
-                        Map
-                      </a>
-                    `
-                    :''
-                  }
-                </td>
-
-                <td>
-                  ${t(o.status)}
-                </td>
-
-              </tr>
-
-            `).join('')}
-
-          </tbody>
-
-        </table>
-
-      </div>
-      `;
-    }
-
     if(tab==='products'){
 
       let rows=await rpc(
@@ -1686,12 +640,7 @@ async function renderAdminTab(tab){
             <div class="product-body">
 
               <h3>${esc(p.name)}</h3>
-
-              <div class="muted">
-                ${esc(p.student_name)}
-              </div>
-
-              <div class="price">
+<div class="price">
                 ${p.price} AFN
               </div>
 
@@ -1747,25 +696,6 @@ async function renderAdminTab(tab){
   }
 }
 
-async function adminApprove(id,approved){
-
-  try{
-
-    await rpc(
-      'admin_approve_student',
-      {
-        p_pin:adminPin,
-        p_student_id:id,
-        p_approved:approved
-      }
-    );
-
-    renderAdminTab('students');
-
-  }catch(x){
-    toast(x.message);
-  }
-}
 
 async function adminDelete(id){
 
@@ -1786,213 +716,71 @@ async function adminDelete(id){
   }
 }
 
-async function openOrder(pid){
 
-  try{
 
-    let rows=await rpc(
-      'public_products',
-      {p_student_id:null}
-    );
-
-    let p=(rows||[]).find(x=>x.id===pid);
-
-    if(!p) return;
-
-    document.querySelector('#view').innerHTML=`
-    <section class="section">
-
-      <div class="grid-2">
-
-        <div class="card product">
-
-          <img
-            src="${p.photo_url||'icon-512.png'}"
-          >
-
-          <div class="product-body">
-
-            <h2>${esc(p.name)}</h2>
-
-            <div class="price">
-              ${p.price} AFN
-            </div>
-
-            <div>
-              ${t('stock')}: ${p.quantity}
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="card">
-
-          <h2>${t('customerOrder')}</h2>
-
-          <form
-            id="orderForm"
-            class="form"
-          >
-
-            <div class="field">
-              <label>${t('productName')}</label>
-              <input
-                value="${esc(p.name)}"
-                readonly
-              >
-            </div>
-
-            <div class="field">
-              <label>${t('qty')}</label>
-              <input
-                id="orderQty"
-                name="qty"
-                type="number"
-                min="1"
-                max="${p.quantity}"
-                value="1"
-                required
-              >
-            </div>
-
-            <div class="notice">
-              ${t('total')}:
-              <strong id="orderTotal">
-                ${p.price} AFN
-              </strong>
-            </div>
-
-            <div class="field">
-              <label>${t('customerPhone')}</label>
-              <input
-                name="phone"
-                required
-              >
-            </div>
-
-            <div class="field">
-              <label>${t('address2')}</label>
-              <textarea
-                name="address"
-                required
-              ></textarea>
-            </div>
-
-            <div class="field">
-
-              <label>${t('location')}</label>
-
-              <div
-                class="actions"
-                style="justify-content:flex-start"
-              >
-
-                <input
-                  id="locInput"
-                  name="location"
-                  readonly
-                  style="flex:1"
-                >
-
-                <button
-                  type="button"
-                  id="getLoc"
-                  class="btn btn-soft"
-                >
-                  ${t('getLocation')}
-                </button>
-
-              </div>
-
-            </div>
-
-            <button class="btn btn-primary">
-              ${t('sendOrder')}
-            </button>
-
-          </form>
-
-        </div>
-
-      </div>
-
-    </section>
-    `;
-
-    let q=document.querySelector('#orderQty');
-
-    q.oninput=()=>{
-
-      document.querySelector('#orderTotal').textContent=
-        (
-          Math.max(1,+q.value||1)*
-          Number(p.price)
-        )
-        .toLocaleString('en-US')
-        +' AFN';
-    };
-
-    document.querySelector('#getLoc').onclick=()=>{
-
-      navigator.geolocation&&
-      navigator.geolocation.getCurrentPosition(
-
-        pos=>{
-
-          document.querySelector('#locInput').value=
-            `${pos.coords.latitude},${pos.coords.longitude}`;
-
-        },
-
-        ()=>toast('لوکیشن اجازه نه لري')
-
-      );
-    };
-
-    document.querySelector('#orderForm').onsubmit=async e=>{
-
-      e.preventDefault();
-
-      try{
-
-        let f=new FormData(e.target);
-
-        let ono=await rpc(
-          'place_order',
-          {
-            p_product_id:p.id,
-            p_quantity:+f.get('qty'),
-            p_customer_phone:f.get('phone'),
-            p_province:'',
-            p_address:f.get('address'),
-            p_location:f.get('location')
-          }
-        );
-
-        localStorage.setItem(
-          'lastOrderNo',
-          ono
-        );
-
-        toast(
-          'فرمایش ثبت شو: '+ono
-        );
-
-        setTimeout(
-          ()=>location.hash='track',
-          700
-        );
-
-      }catch(x){
-        toast(x.message);
-      }
-    };
-
-  }catch(x){
-    toast(x.message);
+function ishAIReply(q=''){
+  const x=String(q||'').trim().toLowerCase();
+  if(!x) return 'مهرباني وکړئ خپله پوښتنه ولیکئ.';
+  if(/نصب|install|هوم|home screen/.test(x)){
+    return 'په Android کې د «نصب اپ» تڼۍ ووهئ. په iPhone کې Safari خلاص کړئ، Share ووهئ او Add to Home Screen انتخاب کړئ.';
   }
+  if(/کاپي|copy|جنس/.test(x)){
+    return 'د خوښ شوي جنس لاندې «جنس کاپي کړه» تڼۍ ووهئ. د جنس نوم، قیمت، کټګوري، تشریحات او د عکس لینک کاپي کېږي؛ بیا یې دوکاندار ته په WhatsApp یا بل اپ کې ولېږئ.';
+  }
+  if(/قیمت|price/.test(x)){
+    return 'د هر جنس قیمت د جنس په کارت کې په AFN ښودل کېږي.';
+  }
+  if(/اډمین|admin/.test(x)){
+    return 'نوي جنسونه یوازې اډمین ثبتوي. مشتریان یوازې جنسونه ګوري او معلومات کاپي کوي.';
+  }
+  if(/واټساپ|whatsapp|دوکاندار|سفارش|ارډر|آرډر/.test(x)){
+    return 'د آرډر لپاره د جنس معلومات د «جنس کاپي کړه» له لارې کاپي کړئ او خپل دوکاندار ته یې په WhatsApp یا بل پیغام کې ولېږئ.';
+  }
+  if(/کټګوري|category|لټون|search/.test(x)){
+    return 'له پورته کټګوریو څخه خپله برخه وټاکئ، یا د لټون په خانه کې د جنس نوم ولیکئ.';
+  }
+  return 'زه د اسحاقزاده انلاین سټور د استعمال په اړه مرسته کوم. د نصب، جنس کاپي، قیمت، کټګورۍ، لټون او آرډر په اړه پوښتنه وکړئ.';
 }
+
+function mountIshaqzadaAI(){
+  if(document.querySelector('#ishAIButton')) return;
+
+  const btn=document.createElement('button');
+  btn.id='ishAIButton';
+  btn.type='button';
+  btn.textContent='🤖 AI';
+  btn.setAttribute('aria-label','AI help');
+  btn.style.cssText='position:fixed;left:16px;bottom:18px;z-index:9999;border:0;border-radius:999px;padding:14px 16px;background:#0b2348;color:#fff;font-weight:800;font-size:16px;box-shadow:0 8px 24px rgba(0,0,0,.25)';
+  document.body.appendChild(btn);
+
+  const panel=document.createElement('div');
+  panel.id='ishAIPanel';
+  panel.style.cssText='display:none;position:fixed;left:14px;right:14px;bottom:84px;z-index:9999;background:#fff;border:1px solid #d9e2ef;border-radius:18px;padding:14px;box-shadow:0 14px 40px rgba(0,0,0,.25);max-width:520px;margin:auto';
+  panel.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
+      <strong style="font-size:18px">🤖 د اسحاقزاده AI مرسته</strong>
+      <button id="ishAIClose" type="button" style="border:0;background:#eef3f9;border-radius:10px;padding:6px 10px;font-size:18px">×</button>
+    </div>
+    <div style="font-size:14px;color:#667085;margin-bottom:10px">د اسحاقزاده انلاین سټور په اړه خپله پوښتنه ولیکئ.</div>
+    <div id="ishAIAnswer" style="background:#f6f8fb;border-radius:12px;padding:10px;min-height:48px;margin-bottom:10px">سلام! څنګه مرسته درسره وکړم؟</div>
+    <div style="display:flex;gap:8px">
+      <input id="ishAIInput" placeholder="پوښتنه ولیکئ..." style="flex:1;padding:12px;border:1px solid #d9e2ef;border-radius:12px">
+      <button id="ishAISend" type="button" class="btn btn-navy">ولېږه</button>
+    </div>`;
+  document.body.appendChild(panel);
+
+  btn.onclick=()=>panel.style.display=panel.style.display==='none'?'block':'none';
+  panel.querySelector('#ishAIClose').onclick=()=>panel.style.display='none';
+  const ask=()=>{
+    const input=panel.querySelector('#ishAIInput');
+    panel.querySelector('#ishAIAnswer').textContent=ishAIReply(input.value);
+    input.value='';
+  };
+  panel.querySelector('#ishAISend').onclick=ask;
+  panel.querySelector('#ishAIInput').addEventListener('keydown',e=>{if(e.key==='Enter') ask();});
+}
+
+window.addEventListener('load',mountIshaqzadaAI);
 
 async function route(){
 
@@ -2021,12 +809,7 @@ async function route(){
   else if(r==='admin'){
     admin();
   }
-
-  else if(r==='track'){
-    await trackOrder();
-  }
-
-  else{
+else{
     location.hash='shop';
     return;
   }
@@ -2045,94 +828,3 @@ window.addEventListener(
 
 setLang(lang);
 
-async function trackOrder(){
-
-  const ono=
-    localStorage.getItem('lastOrderNo')||'';
-
-  document.querySelector('#view').innerHTML=`
-  <section class="section">
-
-    <div class="track-shell">
-
-      <div class="track-icon">
-        📦
-      </div>
-
-      <h2>${t('trackOrder')}</h2>
-
-      <p class="muted">
-        ${
-          ono
-          ?esc(ono)
-          :'فرمایش نمبر نشته'
-        }
-      </p>
-
-      <div
-        id="trackStatus"
-        class="status-hero"
-      >
-        ...
-      </div>
-
-      <button
-        class="btn btn-soft"
-        onclick="location.hash='shop'"
-      >
-        ${t('shop')}
-      </button>
-
-    </div>
-
-  </section>
-  `;
-
-  if(!ono) return;
-
-  const refresh=async()=>{
-
-    try{
-
-      let x=await rpc(
-        'public_order_status',
-        {p_order_no:ono}
-      );
-
-      let o=
-        Array.isArray(x)
-        ?x[0]
-        :x;
-
-      if(!o) return;
-
-      let el=
-        document.querySelector('#trackStatus');
-
-      if(el){
-
-        el.innerHTML=`
-          <span class="status-dot"></span>
-
-          <strong>
-            ${t(o.status)}
-          </strong>
-
-          <small>
-            ${esc(o.product_name)}
-            ·
-            ${Number(o.total).toLocaleString('en-US')}
-            AFN
-          </small>
-        `;
-      }
-
-    }catch(e){}
-  };
-
-  await refresh();
-
-  setTimeout(refresh,3000);
-  setTimeout(refresh,7000);
-}
-\n\n// Ishaqzada AI help button\n(function setupIshaqzadaAI(){\n  function add(){\n    if(document.getElementById('ishaqzadaAiBtn')) return;\n    const b=document.createElement('button'); b.id='ishaqzadaAiBtn'; b.textContent='🤖 AI';\n    b.style.cssText='position:fixed;left:18px;bottom:18px;z-index:9999;border:0;border-radius:999px;padding:14px 18px;background:#0b2348;color:white;font-weight:800;box-shadow:0 8px 24px #0003';\n    document.body.appendChild(b);\n    b.onclick=()=>{\n      const q=prompt(lang==='en'?'Ask about Ishaqzada Online Store:':lang==='fa'?'درباره فروشگاه آنلاین اسحاق‌زاده بپرسید:':'د اسحاقزاده انلاین سټور په اړه پوښتنه وکړه:');\n      if(!q) return;\n      const a=lang==='en'?'Ishaqzada Online Store lets customers browse products, copy a product and send it to the shopkeeper to order. Use the menu for Admin access and the Install App button to add the store to your phone.':lang==='fa'?'فروشگاه آنلاین اسحاق‌زاده برای دیدن محصولات است. محصول را کپی کنید و برای سفارش به فروشنده بفرستید. از منو به ادمین بروید و با دکمه نصب اپ، فروشگاه را به موبایل اضافه کنید.':'اسحاقزاده انلاین سټور کې مشتریان جنسونه ګوري. د خوښې جنس کاپي کړه او د اډر کولو لپاره یې دوکاندار ته ولېږه. له مینو څخه اډمین ته تللای شې او د «نصب اپ» تڼۍ له لارې یې په موبایل کې اضافه کولای شې.';\n      alert('🤖 '+a);\n    };\n  }\n  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',add); else add();\n})();\n
