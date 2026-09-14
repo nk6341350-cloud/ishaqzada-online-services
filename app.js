@@ -382,10 +382,6 @@ let rows=await rpc(
             </div>
 
 
-            <div class="stock">
-              ${t('stock')}: ${p.quantity}
-            </div>
-
             <p class="muted">
               ${esc(p.province)}
             </p>

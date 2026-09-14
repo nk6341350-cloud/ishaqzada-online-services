@@ -442,10 +442,6 @@ let rows=await rpc(
             </div>
 
 
-            <div class="stock">
-              ${t('stock')}: ${p.quantity}
-            </div>
-
             <div style="margin:12px 0;padding:12px;border-radius:14px;background:#f6f8fb;line-height:1.9">
               <div><strong>${lang==="en"?"Category":lang==="fa"?"دسته‌بندی":"کټګوري"}:</strong> ${esc(p.category||"")}</div>
               <div><strong>${lang==="en"?"Details":lang==="fa"?"توضیحات":"تشریحات"}:</strong> ${esc(p.address||p.description||(lang==="en"?"No details added":lang==="fa"?"توضیحی ثبت نشده":"تشریح نه ده ثبت شوې"))}</div>
