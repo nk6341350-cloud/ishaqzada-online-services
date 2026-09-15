@@ -190,3 +190,56 @@ footer{border-top:3px solid #c9a24b}footer .complaint{margin-top:10px;font-weigh
 .category-gallery .cat-card{min-height:0!important;height:auto!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;opacity:0!important}
 .category-gallery .cat-card .cat-photo,.category-gallery .cat-card>span:last-child{opacity:0!important;background:transparent!important;border:0!important}
 .category-gallery .cat-card.active{outline:2px solid rgba(242,207,114,.85)!important;outline-offset:-4px!important}
+
+/* Exact approved 4x4 category picture with 16 working click zones */
+.category-gallery{
+  position:relative !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  grid-template-rows:repeat(4,minmax(0,1fr)) !important;
+  gap:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  aspect-ratio:1/1 !important;
+  background:#080808 url("categories-all.jpg") center/100% 100% no-repeat !important;
+  border:1.5px solid #d2aa55 !important;
+  border-radius:24px !important;
+}
+.category-gallery .cat-card{
+  position:relative !important;
+  z-index:2 !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  opacity:1 !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  outline:none !important;
+  cursor:pointer !important;
+  -webkit-tap-highlight-color:rgba(240,207,114,.18);
+}
+.category-gallery .cat-card .cat-photo,
+.category-gallery .cat-card>span:last-child{
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+.category-gallery .cat-card.active{
+  background:rgba(240,207,114,.10) !important;
+  box-shadow:inset 0 0 0 3px rgba(242,207,114,.90) !important;
+}
+@media(max-width:620px){
+  .category-gallery{
+    display:grid !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    grid-template-rows:repeat(4,minmax(0,1fr)) !important;
+    gap:0 !important;
+    padding:0 !important;
+  }
+  .category-gallery .cat-card{min-height:0 !important;height:100% !important;}
+}
