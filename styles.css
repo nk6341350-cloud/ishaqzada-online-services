@@ -243,3 +243,31 @@ footer{border-top:3px solid #c9a24b}footer .complaint{margin-top:10px;font-weigh
   }
   .category-gallery .cat-card{min-height:0 !important;height:100% !important;}
 }
+
+/* FINAL category hit-map correction: exact 4x4 geometry and no RTL reversal */
+.category-gallery{
+  direction:ltr !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,25%) !important;
+  grid-template-rows:repeat(4,25%) !important;
+  width:100% !important;
+  aspect-ratio:1/1 !important;
+  gap:0 !important;
+  padding:0 !important;
+  box-sizing:border-box !important;
+}
+.category-gallery .cat-card{
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+  transform:none !important;
+}
+.category-gallery .cat-card.active{
+  background:transparent !important;
+  box-shadow:inset 0 0 0 3px #e2bb58 !important;
+}
