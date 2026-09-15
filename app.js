@@ -4,38 +4,40 @@ const sb=(cfg.SUPABASE_URL&&cfg.SUPABASE_URL.startsWith('http')&&cfg.SUPABASE_AN
 
 const cats=[
   'شمپو',
+  'شمپو او تیل',
+  'سپري',
+  'سیرم',
+  'معجون',
   'تیل',
-  'درمل',
-  'روغتیا',
-  'وزن',
-  'ویښتان',
+  'کپسول',
+  'کپسول او تیل',
+  'کریم او فیس واش',
   'کریم',
-  'سیروم',
-  'نور',
+  'فیس واش',
   'ساعتونه',
   'عطرونه',
-  'معجون',
-  'کپسول',
-  'شمپو او تیل',
-  'کپسول او تیل'
+  'فوډر',
+  'چائ',
+  'کریم او سیرم'
 ];
 
 const catPics={
-  'شمپو':'cat-shampoo.jpg',
-  'تیل':'cat-oil.jpg',
-  'درمل':'cat-medicine.jpg',
-  'روغتیا':'cat-health.jpg',
-  'وزن':'cat-weight.jpg',
-  'ویښتان':'cat-hair.jpg',
-  'کریم':'cat-cream.jpg',
-  'سیروم':'cat-serum.jpg',
-  'نور':'cat-other.jpg',
-  'ساعتونه':'cat-watch.jpg',
-  'عطرونه':'cat-perfume.jpg',
-  'معجون':'cat-majoon.jpg',
-  'کپسول':'cat-capsule.jpg',
-  'شمپو او تیل':'cat-shampoo-oil.jpg',
-  'کپسول او تیل':'cat-capsule-oil.jpg'
+  'شمپو':'cat-01.jpg',
+  'شمپو او تیل':'cat-02.jpg',
+  'سپري':'cat-03.jpg',
+  'سیرم':'cat-04.jpg',
+  'معجون':'cat-05.jpg',
+  'تیل':'cat-06.jpg',
+  'کپسول':'cat-07.jpg',
+  'کپسول او تیل':'cat-08.jpg',
+  'کریم او فیس واش':'cat-09.jpg',
+  'کریم':'cat-10.jpg',
+  'فیس واش':'cat-11.jpg',
+  'ساعتونه':'cat-12.jpg',
+  'عطرونه':'cat-13.jpg',
+  'فوډر':'cat-14.jpg',
+  'چائ':'cat-15.jpg',
+  'کریم او سیرم':'cat-16.jpg'
 };
 
 const tr={
@@ -374,13 +376,8 @@ let rows=await rpc(
             </div>
             <div class="free-delivery-notice">
               <strong>🚚 ${lang==="en"?"Free Delivery":lang==="fa"?"ارسال رایگان":"وړیا ډلیوري"}</strong>
-              <div>${lang==="en"
-                ?"Delivery to your province, home, office, or shop is completely free. Your order will reach you within 24 hours."
-                :lang==="fa"
-                ?"ارسال تا ولایت، خانه، دفتر یا دکان شما کاملاً رایگان است. سفارش شما تا ۲۴ ساعت به شما می‌رسد."
-                :"ستاسو تر ولایت، کور، دفتر یا دوکان پورې ډلیوري بالکل وړیا ده. ستاسو فرمایش به تر ۲۴ ساعتونو پورې در ورسېږي."}</div>
+              <div>${lang==="en"?"Delivery to your province, home, office, or shop is completely free. Your order will reach you within 24 hours.":lang==="fa"?"ارسال تا ولایت، خانه، دفتر یا دکان شما کاملاً رایگان است. سفارش شما تا ۲۴ ساعت به شما می‌رسد.":"ستاسو تر ولایت، کور، دفتر یا دوکان پورې ډلیوري بالکل وړیا ده. ستاسو فرمایش به تر ۲۴ ساعتونو پورې در ورسېږي."}</div>
             </div>
-
 
             <p class="muted">
               ${esc(p.province)}
@@ -618,7 +615,8 @@ async function renderAdminTab(tab){
       );
 
       box.innerHTML=`
-      <div class="card" style="margin-bottom:16px">
+      <div class="admin-total-products"><span>${lang==="en"?"Total registered products":lang==="fa"?"مجموع محصولات ثبت‌شده":"ټول ثبت شوي جنسونه"}</span><strong>${(rows||[]).length}</strong></div>
+        <div class="card" style="margin-bottom:16px">
         <h3>${lang==="en"?"Add Product":lang==="fa"?"ثبت محصول جدید":"نوی جنس ثبت"}</h3>
         <form id="adminProductForm" class="form">
           <div class="field"><label>${t('photo')}</label><input name="photo" type="file" accept="image/*" required></div>
