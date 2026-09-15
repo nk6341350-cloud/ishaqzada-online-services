@@ -271,3 +271,91 @@ footer{border-top:3px solid #c9a24b}footer .complaint{margin-top:10px;font-weigh
   background:transparent !important;
   box-shadow:inset 0 0 0 3px #e2bb58 !important;
 }
+
+/* FINAL: 16 REAL category tiles, each is its own clickable button */
+.category-gallery{
+  direction:ltr !important;
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  grid-template-rows:auto !important;
+  gap:8px !important;
+  padding:10px !important;
+  width:100% !important;
+  aspect-ratio:auto !important;
+  background:#090909 !important;
+  border:1.5px solid #d2aa55 !important;
+  border-radius:24px !important;
+  box-sizing:border-box !important;
+}
+.category-gallery .cat-card{
+  direction:rtl !important;
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  aspect-ratio:1/1 !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  overflow:hidden !important;
+  background:#0b0b0b !important;
+  border:1.5px solid #d2aa55 !important;
+  border-radius:14px !important;
+  box-shadow:none !important;
+  box-sizing:border-box !important;
+  transform:none !important;
+}
+.category-gallery .cat-card .cat-photo{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center !important;
+  pointer-events:none !important;
+}
+.category-gallery .cat-card>span:last-child{
+  display:none !important;
+}
+.category-gallery .cat-card.active{
+  background:#0b0b0b !important;
+  border:3px solid #f0c85c !important;
+  box-shadow:0 0 0 2px rgba(240,200,92,.20) !important;
+}
+@media(max-width:620px){
+  .category-gallery{
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:6px !important;
+    padding:8px !important;
+  }
+  .category-gallery .cat-card{aspect-ratio:1/1 !important;}
+}
+
+/* FINAL independent category cards */
+.category-gallery{
+ direction:ltr!important;display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:7px!important;padding:9px!important;aspect-ratio:auto!important;
+ background:#090909!important;box-sizing:border-box!important;
+}
+.category-gallery .cat-card{
+ direction:rtl!important;display:block!important;position:relative!important;
+ width:100%!important;height:auto!important;aspect-ratio:1/1!important;
+ padding:0!important;margin:0!important;overflow:hidden!important;
+ opacity:1!important;visibility:visible!important;background:#111!important;
+ border:2px solid #d6ad51!important;border-radius:13px!important;
+ box-shadow:none!important;transform:none!important;box-sizing:border-box!important;
+}
+.category-gallery .cat-card .cat-photo{
+ display:block!important;width:100%!important;height:100%!important;
+ object-fit:cover!important;object-position:center!important;
+ opacity:1!important;visibility:visible!important;pointer-events:none!important;
+}
+.category-gallery .cat-card>span:last-child{display:none!important}
+.category-gallery .cat-card.active{
+ border:3px solid #f4cf68!important;
+ box-shadow:0 0 0 2px rgba(244,207,104,.25)!important;
+}

@@ -22,22 +22,22 @@ const cats=[
 ];
 
 const catPics={
-  'شمپو':'cat-01.jpg',
-  'شمپو او تیل':'cat-02.jpg',
-  'سپري':'cat-03.jpg',
-  'سیرم':'cat-04.jpg',
-  'معجون':'cat-05.jpg',
-  'تیل':'cat-06.jpg',
-  'کپسول':'cat-07.jpg',
-  'کپسول او تیل':'cat-08.jpg',
-  'کریم او فیس واش':'cat-09.jpg',
-  'کریم':'cat-10.jpg',
-  'فیس واش':'cat-11.jpg',
-  'ساعتونه':'cat-12.jpg',
-  'عطرونه':'cat-13.jpg',
-  'فوډر':'cat-14.jpg',
-  'چائ':'cat-15.jpg',
-  'کریم او سیرم':'cat-16.jpg'
+  'شمپو':'category-01.jpg',
+  'شمپو او تیل':'category-02.jpg',
+  'سپري':'category-03.jpg',
+  'سیرم':'category-04.jpg',
+  'معجون':'category-05.jpg',
+  'تیل':'category-06.jpg',
+  'کپسول':'category-07.jpg',
+  'کپسول او تیل':'category-08.jpg',
+  'کریم او فیس واش':'category-09.jpg',
+  'کریم':'category-10.jpg',
+  'فیس واش':'category-11.jpg',
+  'ساعتونه':'category-12.jpg',
+  'عطرونه':'category-13.jpg',
+  'فوډر':'category-14.jpg',
+  'چائ':'category-15.jpg',
+  'کریم او سیرم':'category-16.jpg'
 };
 
 const tr={
