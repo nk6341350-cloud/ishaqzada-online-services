@@ -184,3 +184,9 @@ footer{border-top:3px solid #c9a24b}footer .complaint{margin-top:10px;font-weigh
 .free-delivery-notice strong{display:block;color:var(--navy);font-size:17px;margin-bottom:3px}
 .admin-total-products{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px;padding:16px 18px;border:1px solid #d7b45a;border-radius:18px;background:linear-gradient(145deg,#fff9e8,#fff);font-weight:800}
 .admin-total-products strong{font-size:28px;color:var(--navy)}
+
+/* Exact user-approved single category image */
+.category-gallery{position:relative!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;background:#0b0b0b url('categories-all.jpg') center/100% 100% no-repeat!important;aspect-ratio:1/1!important;padding:0!important;gap:0!important;overflow:hidden!important;border:1.5px solid #d2aa55!important;border-radius:24px!important}
+.category-gallery .cat-card{min-height:0!important;height:auto!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;opacity:0!important}
+.category-gallery .cat-card .cat-photo,.category-gallery .cat-card>span:last-child{opacity:0!important;background:transparent!important;border:0!important}
+.category-gallery .cat-card.active{outline:2px solid rgba(242,207,114,.85)!important;outline-offset:-4px!important}
