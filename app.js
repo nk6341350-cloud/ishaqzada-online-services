@@ -269,6 +269,37 @@ function whatsappNumber(value=''){
   return n;
 }
 
+
+const categoryTranslations={
+  'ټول':{ps:'ټول',fa:'همه',en:'All'}, 'رنګ':{ps:'رنګ',fa:'رنگ مو',en:'Hair Color'},
+  'میکپ سامان':{ps:'میکپ سامان',fa:'لوازم آرایش',en:'Makeup'}, 'وریښتان':{ps:'وریښتان',fa:'موی مصنوعی',en:'Hair'},
+  'شمپو':{ps:'شمپو',fa:'شامپو',en:'Shampoo'}, 'شمپو او تیل':{ps:'شمپو او تیل',fa:'شامپو و روغن',en:'Shampoo & Oil'},
+  'سپري':{ps:'سپري',fa:'اسپری',en:'Spray'}, 'سیرم':{ps:'سیرم',fa:'سرم',en:'Serum'}, 'معجون':{ps:'معجون',fa:'معجون',en:'Majoon'},
+  'تیل':{ps:'تیل',fa:'روغن',en:'Oil'}, 'کپسول':{ps:'کپسول',fa:'کپسول',en:'Capsules'}, 'کپسول او تیل':{ps:'کپسول او تیل',fa:'کپسول و روغن',en:'Capsules & Oil'},
+  'کریم او فیس واش':{ps:'کریم او فیس واش',fa:'کریم و شوینده صورت',en:'Cream & Face Wash'}, 'کریم':{ps:'کریم',fa:'کریم',en:'Cream'},
+  'فیس واش':{ps:'فیس واش',fa:'شوینده صورت',en:'Face Wash'}, 'ساعتونه':{ps:'ساعتونه',fa:'ساعت‌ها',en:'Watches'},
+  'عطرونه':{ps:'عطرونه',fa:'عطرها',en:'Perfumes'}, 'فوډر':{ps:'فوډر',fa:'پودر',en:'Powder'}, 'چائ':{ps:'چائ',fa:'چای',en:'Tea'},
+  'کریم او سیرم':{ps:'کریم او سیرم',fa:'کریم و سرم',en:'Cream & Serum'}
+};
+function catText(c){return categoryTranslations[c]?.[lang]||c||'';}
+const productTranslationCache=new Map();
+async function autoTranslateText(text,target){
+  text=String(text||'').trim(); if(!text||target==='ps') return text;
+  const key=target+'|'+text; if(productTranslationCache.has(key)) return productTranslationCache.get(key);
+  try{
+    const tl=target==='fa'?'fa':'en';
+    const u='https://translate.googleapis.com/translate_a/single?client=gtx&sl=ps&tl='+tl+'&dt=t&q='+encodeURIComponent(text);
+    const r=await fetch(u); if(!r.ok) throw new Error('translate');
+    const j=await r.json(); const out=(j[0]||[]).map(x=>x[0]||'').join('');
+    productTranslationCache.set(key,out||text); return out||text;
+  }catch(e){return text;}
+}
+async function translateRenderedProducts(){
+  if(lang==='ps') return;
+  const nodes=[...document.querySelectorAll('[data-auto-translate]')];
+  await Promise.all(nodes.map(async el=>{el.textContent=await autoTranslateText(el.dataset.source||'',lang);}));
+}
+
 async function shop(){
 
   document.querySelector('#view').innerHTML=`
@@ -302,7 +333,7 @@ async function shop(){
       ${cats.map(c=>`
         <button class="cat-card" data-cat="${c}">
           <span class="cat-photo"><img src="${catPics[c]}" alt="${c}"></span>
-          <span>${c}</span>
+          <span>${catText(c)}</span>
         </button>
       `).join('')}
 
@@ -352,10 +383,10 @@ let rows=await rpc(
           <div class="product-body">
 
             <div class="badge">
-              ${esc(p.category)}
+              ${esc(catText(p.category))}
             </div>
 
-            <h3>${esc(p.name)}</h3>
+            <h3 data-auto-translate data-source="${esc(p.name)}">${esc(p.name)}</h3>
 
             <div class="price">
               ${Number(p.price).toLocaleString('en-US')} AFN
@@ -627,7 +658,7 @@ async function renderAdminTab(tab){
 
             <div class="product-body">
 
-              <h3>${esc(p.name)}</h3>
+              <h3 data-auto-translate data-source="${esc(p.name)}">${esc(p.name)}</h3>
 <div class="price">
                 ${p.price} AFN
               </div>
