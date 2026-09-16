@@ -382,6 +382,21 @@ let rows=await rpc(
 
     let all=rows||[];
     window.ISHAQZADA_PRODUCTS=all;
+
+    // Show a real registered product photo on each category card.
+    const categoryPhotos = {};
+    for (const p of all) {
+      if (p && p.category && p.photo_url && !categoryPhotos[p.category]) categoryPhotos[p.category] = p.photo_url;
+    }
+    document.querySelectorAll('#catRow .cat-card').forEach(btn => {
+      const c = btn.dataset.cat || '';
+      const img = btn.querySelector('.cat-photo img');
+      if (!img) return;
+      const firstPhoto = all.find(p => p && p.photo_url)?.photo_url;
+      img.src = (c && categoryPhotos[c]) ? categoryPhotos[c] : (firstPhoto || 'logo.jpg');
+      img.onerror = () => { img.onerror = null; img.src = 'logo.jpg'; };
+    });
+
     let cat='';
 
     const box=document.querySelector('#productGrid');
