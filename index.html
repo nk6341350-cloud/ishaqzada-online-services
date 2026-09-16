@@ -256,8 +256,20 @@ async function rpc(fn,args={}){
   return data;
 }
 
+async function optimizeImage(file){
+  if(!file||!file.type||!file.type.startsWith('image/')||file.size<220000) return file;
+  try{
+    const bmp=await createImageBitmap(file);
+    const max=1400, scale=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const c=document.createElement('canvas'); c.width=Math.max(1,Math.round(bmp.width*scale)); c.height=Math.max(1,Math.round(bmp.height*scale));
+    c.getContext('2d',{alpha:false}).drawImage(bmp,0,0,c.width,c.height); bmp.close?.();
+    const blob=await new Promise(r=>c.toBlob(r,'image/webp',0.78));
+    return blob&&blob.size<file.size?new File([blob],file.name.replace(/\.[^.]+$/,'.webp'),{type:'image/webp'}):file;
+  }catch{return file;}
+}
 async function upload(file,prefix='img'){
   if(!file||!file.size) return '';
+  if(file.type?.startsWith('image/')) file=await optimizeImage(file);
 
   let ext=(file.name.split('.').pop()||'jpg')
     .replace(/[^a-z0-9]/gi,'');
@@ -283,7 +295,7 @@ async function upload(file,prefix='img'){
 function mediaData(raw=''){const marker='\n<!--MEDIA:';const x=String(raw||''),i=x.lastIndexOf(marker);if(i<0)return{text:x,photos:[],video:''};try{const e=x.indexOf('-->',i),d=JSON.parse(x.slice(i+marker.length,e));return{text:x.slice(0,i),photos:d.photos||[],video:d.video||''}}catch{return{text:x,photos:[],video:''}}}
 function mediaPack(text,photos=[],video=''){const x=photos.filter(Boolean).slice(0,2);return(!x.length&&!video)?String(text||''):String(text||'')+'\n<!--MEDIA:'+JSON.stringify({photos:x,video:video||''})+'-->'}
 function productMedia(p){const m=mediaData(p.address||p.description||'');return{text:m.text,photos:[p.photo_url,...m.photos].filter(Boolean).slice(0,3),video:m.video}}
-function mediaHtml(p){const m=productMedia(p);return `<div class="product-media"><img class="product-main-img" src="${m.photos[0]||'icon-512.png'}">${m.photos.length>1||m.video?`<div class="product-thumbs">${m.photos.map(u=>`<button type="button" onclick="this.closest('.product-media').querySelector('.product-main-img').src='${u}'"><img src="${u}"></button>`).join('')}${m.video?`<video controls src="${m.video}"></video>`:''}</div>`:''}</div>`}
+function mediaHtml(p){const m=productMedia(p);return `<div class="product-media"><img class="product-main-img" loading="lazy" decoding="async" fetchpriority="low" src="${m.photos[0]||'icon-512.png'}">${m.photos.length>1||m.video?`<div class="product-thumbs">${m.photos.map(u=>`<button type="button" onclick="this.closest('.product-media').querySelector('.product-main-img').src='${u}'"><img loading="lazy" decoding="async" src="${u}"></button>`).join('')}${m.video?`<video controls preload="metadata" playsinline src="${m.video}"></video>`:''}</div>`:''}</div>`}
 
 function setLang(l){
   lang=l;
@@ -461,10 +473,7 @@ let rows=await rpc(
 
         <article class="card product">
 
-          <img
-            src="${p.photo_url||'icon-512.png'}"
-            alt="${esc(p.name)}"
-          >
+          ${mediaHtml(p)}
 
           <div class="product-body">
 
@@ -797,7 +806,7 @@ async function renderAdminTab(tab){
           e.preventDefault();
           try{
             const f=new FormData(e.target);
-            const photos=[...e.target.querySelector('[name=photos]').files].slice(0,3); const photoUrls=[]; for(const file of photos) photoUrls.push(await upload(file,'products')); const vf=f.get('video'); const video=vf?.size?await upload(vf,'products'):'';
+            const photos=[...e.target.querySelector('[name=photos]').files].slice(0,3); const vf=f.get('video'); const jobs=photos.map(file=>upload(file,'products')); if(vf?.size) jobs.push(upload(vf,'products')); const uploaded=await Promise.all(jobs); const photoUrls=uploaded.slice(0,photos.length); const video=vf?.size?uploaded[photos.length]:'';
             await rpc('admin_add_product',{
               p_pin:adminPin,
               p_name:f.get('name'),
@@ -882,7 +891,7 @@ async function adminEditProduct(p){
     e.preventDefault();
     try{
       const f=new FormData(e.target);
-      const cur=productMedia(p); let photo=p.photo_url||'', extras=cur.photos.slice(1), video=cur.video; const np=[...e.target.querySelector('[name=photos]').files].slice(0,3); if(np.length){const us=[];for(const file of np)us.push(await upload(file,'products'));photo=us[0];extras=us.slice(1)} const vf=f.get('video');if(vf?.size)video=await upload(vf,'products');
+      const cur=productMedia(p); let photo=p.photo_url||'', extras=cur.photos.slice(1), video=cur.video; const np=[...e.target.querySelector('[name=photos]').files].slice(0,3); const vf=f.get('video'); if(np.length||vf?.size){const jobs=np.map(file=>upload(file,'products'));if(vf?.size)jobs.push(upload(vf,'products'));const us=await Promise.all(jobs);if(np.length){photo=us[0];extras=us.slice(1,np.length)}if(vf?.size)video=us[np.length]}
 
       await rpc('admin_update_product',{
         p_pin:adminPin,
