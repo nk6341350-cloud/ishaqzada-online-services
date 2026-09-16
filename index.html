@@ -80,7 +80,24 @@ const cats=[
   'کریم او سیرم'
 ];
 
-const catPics={};
+const catPics={
+  'شمپو':'category-images/shampoo.jpg',
+  'شمپو او تیل':'category-images/shampoo-oil.jpg',
+  'سپري':'category-images/spray.jpg',
+  'سیرم':'category-images/serum.jpg',
+  'معجون':'category-images/majoon.jpg',
+  'تیل':'category-images/oil.jpg',
+  'کپسول':'category-images/capsule.jpg',
+  'کپسول او تیل':'category-images/capsule-oil.jpg',
+  'کریم او فیس واش':'category-images/cream-facewash.jpg',
+  'کریم':'category-images/cream.jpg',
+  'فیس واش':'category-images/facewash.jpg',
+  'ساعتونه':'category-images/watches.jpg',
+  'عطرونه':'category-images/perfume.jpg',
+  'فوډر':'category-images/powder.jpg',
+  'چائ':'category-images/tea.jpg',
+  'کریم او سیرم':'category-images/cream-serum.jpg'
+};
 
 const tr={
 ps:{
@@ -353,13 +370,8 @@ async function shop(){
 
     <div class="category-gallery" id="catRow">
 
-      <button class="cat-card active" data-cat="">
-        <span class="cat-photo"><img src="cat-other.jpg" alt="${t('all')}"></span>
-        <span>${t('all')}</span>
-      </button>
-
       ${cats.map(c=>`
-        <button class="cat-card" data-cat="${c}">
+        <button class="cat-card ${c===cats[0]?'active':''}" data-cat="${c}">
           <span class="cat-photo"><img src="${catPics[c]}" alt="${c}"></span>
           <span>${c}</span>
         </button>
@@ -383,21 +395,9 @@ let rows=await rpc(
     let all=rows||[];
     window.ISHAQZADA_PRODUCTS=all;
 
-    // Show a real registered product photo on each category card.
-    const categoryPhotos = {};
-    for (const p of all) {
-      if (p && p.category && p.photo_url && !categoryPhotos[p.category]) categoryPhotos[p.category] = p.photo_url;
-    }
-    document.querySelectorAll('#catRow .cat-card').forEach(btn => {
-      const c = btn.dataset.cat || '';
-      const img = btn.querySelector('.cat-photo img');
-      if (!img) return;
-      const firstPhoto = all.find(p => p && p.photo_url)?.photo_url;
-      img.src = (c && categoryPhotos[c]) ? categoryPhotos[c] : (firstPhoto || 'logo.jpg');
-      img.onerror = () => { img.onerror = null; img.src = 'logo.jpg'; };
-    });
+    // Category cards use their own fixed matching category images.
 
-    let cat='';
+    let cat=cats[0]||'';
 
     const box=document.querySelector('#productGrid');
     const search=document.querySelector('#searchBox');
