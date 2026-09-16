@@ -279,6 +279,12 @@ async function upload(file,prefix='img'){
     .data.publicUrl;
 }
 
+
+function mediaData(raw=''){const marker='\n<!--MEDIA:';const x=String(raw||''),i=x.lastIndexOf(marker);if(i<0)return{text:x,photos:[],video:''};try{const e=x.indexOf('-->',i),d=JSON.parse(x.slice(i+marker.length,e));return{text:x.slice(0,i),photos:d.photos||[],video:d.video||''}}catch{return{text:x,photos:[],video:''}}}
+function mediaPack(text,photos=[],video=''){const x=photos.filter(Boolean).slice(0,2);return(!x.length&&!video)?String(text||''):String(text||'')+'\n<!--MEDIA:'+JSON.stringify({photos:x,video:video||''})+'-->'}
+function productMedia(p){const m=mediaData(p.address||p.description||'');return{text:m.text,photos:[p.photo_url,...m.photos].filter(Boolean).slice(0,3),video:m.video}}
+function mediaHtml(p){const m=productMedia(p);return `<div class="product-media"><img class="product-main-img" src="${m.photos[0]||'icon-512.png'}">${m.photos.length>1||m.video?`<div class="product-thumbs">${m.photos.map(u=>`<button type="button" onclick="this.closest('.product-media').querySelector('.product-main-img').src='${u}'"><img src="${u}"></button>`).join('')}${m.video?`<video controls src="${m.video}"></video>`:''}</div>`:''}</div>`}
+
 function setLang(l){
   lang=l;
   localStorage.setItem('lang',l);
@@ -727,7 +733,7 @@ async function renderAdminTab(tab){
         <div class="card" style="margin-bottom:16px">
         <h3>${lang==="en"?"Add Product":lang==="fa"?"ثبت محصول جدید":"نوی جنس ثبت"}</h3>
         <form id="adminProductForm" class="form">
-          <div class="field"><label>${t('photo')}</label><input name="photo" type="file" accept="image/*" required></div>
+          <div class="field"><label>${lang==="fa"?"عکس‌ها (۱ تا ۳)":lang==="en"?"Photos (1–3)":"عکسونه (۱ تر ۳)"}</label><input name="photos" type="file" accept="image/*" multiple required></div><div class="field"><label>${lang==="fa"?"ویدیو (اختیاری)":lang==="en"?"Video (optional)":"ویډیو (اختیاري)"}</label><input name="video" type="file" accept="video/*"></div>
           <div class="field"><label>${t('productName')}</label><input name="name" required></div>
           <div class="grid-2">
             <div class="field"><label>${t('price')}</label><input name="price" type="number" min="0" required></div>
@@ -743,9 +749,7 @@ async function renderAdminTab(tab){
 
           <div class="card product">
 
-            <img
-              src="${p.photo_url||'icon-512.png'}"
-            >
+            ${mediaHtml(p)}
 
             <div class="product-body">
 
@@ -793,7 +797,7 @@ async function renderAdminTab(tab){
           e.preventDefault();
           try{
             const f=new FormData(e.target);
-            const photo=await upload(f.get('photo'),'products');
+            const photos=[...e.target.querySelector('[name=photos]').files].slice(0,3); const photoUrls=[]; for(const file of photos) photoUrls.push(await upload(file,'products')); const vf=f.get('video'); const video=vf?.size?await upload(vf,'products'):'';
             await rpc('admin_add_product',{
               p_pin:adminPin,
               p_name:f.get('name'),
@@ -801,8 +805,8 @@ async function renderAdminTab(tab){
               p_price:+f.get('price'),
               p_category:f.get('category'),
               p_province:'',
-              p_address:f.get('address'),
-              p_photo_url:photo
+              p_address:mediaPack(f.get('address'),photoUrls.slice(1),video),
+              p_photo_url:photoUrls[0]
             });
             toast(lang==="en"?"Product saved":lang==="fa"?"محصول ثبت شد":"جنس ثبت شو");
             renderAdminTab('products');
@@ -830,9 +834,10 @@ async function adminEditProduct(p){
 
       <form id="adminEditProductForm" class="form">
         <div class="field">
-          <label>${t('photo')}</label>
-          <input name="photo" type="file" accept="image/*">
+          <label>${lang==="fa"?"عکس‌ها (۱ تا ۳)":lang==="en"?"Photos (1–3)":"عکسونه (۱ تر ۳)"}</label>
+          <input name="photos" type="file" accept="image/*" multiple>
           <small class="muted">${lang==="en"?"Leave empty to keep current photo":lang==="fa"?"برای حفظ عکس فعلی خالی بگذارید":"که عکس نه بدلوې، دا خانه تشه پرېږده"}</small>
+        </div><div class="field"><label>${lang==="fa"?"ویدیو (اختیاری)":lang==="en"?"Video (optional)":"ویډیو (اختیاري)"}</label><input name="video" type="file" accept="video/*">
         </div>
 
         <div class="field">
@@ -877,10 +882,7 @@ async function adminEditProduct(p){
     e.preventDefault();
     try{
       const f=new FormData(e.target);
-      let photo='';
-      if(f.get('photo')?.size){
-        photo=await upload(f.get('photo'),'products');
-      }
+      const cur=productMedia(p); let photo=p.photo_url||'', extras=cur.photos.slice(1), video=cur.video; const np=[...e.target.querySelector('[name=photos]').files].slice(0,3); if(np.length){const us=[];for(const file of np)us.push(await upload(file,'products'));photo=us[0];extras=us.slice(1)} const vf=f.get('video');if(vf?.size)video=await upload(vf,'products');
 
       await rpc('admin_update_product',{
         p_pin:adminPin,
@@ -890,7 +892,7 @@ async function adminEditProduct(p){
         p_price:+f.get('price'),
         p_category:f.get('category'),
         p_province:p.province||'',
-        p_address:f.get('address'),
+        p_address:mediaPack(f.get('address'),extras,video),
         p_photo_url:photo
       });
 
