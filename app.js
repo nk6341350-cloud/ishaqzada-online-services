@@ -323,23 +323,7 @@ let rows=await rpc(
 
     let all=rows||[];
 
-    // Use a real registered product photo for every category card.
-    // The category name stays directly below its photo.
-    const categoryPhotos = {};
-    for (const p of all) {
-      if (p && p.category && p.photo_url && !categoryPhotos[p.category]) {
-        categoryPhotos[p.category] = p.photo_url;
-      }
-    }
-    document.querySelectorAll('#catRow .cat-card').forEach(btn => {
-      const c = btn.dataset.cat || '';
-      const img = btn.querySelector('.cat-photo img');
-      if (!img) return;
-      if (c && categoryPhotos[c]) img.src = categoryPhotos[c];
-      else if (!c && all.find(p => p && p.photo_url)) img.src = all.find(p => p && p.photo_url).photo_url;
-      else img.src = 'logo.jpg';
-      img.onerror = () => { img.onerror = null; img.src = 'logo.jpg'; };
-    });
+    // Category cards use the built-in category images embedded in index.html.
 
     let cat='';
 
